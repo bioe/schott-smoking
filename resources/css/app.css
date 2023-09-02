@@ -2,6 +2,9 @@
 html,
 body.guest {
     height: 100%;
+    margin: 0;
+    padding: 0;
+    /* overflow-y: hidden; */
 }
 
 body.guest {
@@ -88,4 +91,49 @@ body.auth {
 
 .table-hover th:hover {
     background-color: #f9fafb;
+}
+
+.square-badge {
+    width: 150px;
+    /* Adjust the size as needed */
+    height: 150px;
+    /* This should match the width to create a square */
+    background-color: #172b4d;
+    /* Change the background color to your preference */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: #ffffff;
+    /* Change the text color to your preference */
+    font-weight: bold;
+    /* Optionally, set the font weight */
+    font-size: 6rem;
+}
+
+.schott-colour {
+    background-color: #005abb;
+}
+
+.schott-colour-dark {
+    background-color: #172b4d;
+}
+
+.schott-bg {
+    background-color: #131E31;
+}
+
+/* Splide */
+.splide__slide img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center center;
+}
+
+.splide__pagination__page {
+    background: #172b4d !important;
+}
+
+.splide__pagination__page.is-active {
+    background: #005abb !important;
 }

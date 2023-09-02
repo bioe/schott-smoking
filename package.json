@@ -21,6 +21,8 @@
         "vue": "^3.2.41"
     },
     "dependencies": {
-        "bootstrap-icons": "^1.10.4"
+        "@splidejs/vue-splide": "^0.6.12",
+        "bootstrap-icons": "^1.10.4",
+        "vue-timer-hook": "^1.0.84"
     }
 }
