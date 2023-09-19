@@ -18,13 +18,10 @@ const props = defineProps({
         type: Object,
         default: () => ({}),
     },
-    useUsername: {
-        type: Boolean
-    }
 });
 
-const routeGroupName = 'users';
-const headerTitle = ref('Users');
+const routeGroupName = 'stations';
+const headerTitle = ref('Stations');
 const form = useForm(props.filters);
 
 const sort = (field) => {
@@ -40,7 +37,7 @@ const submit = () => {
 };
 
 const destroy = (id, name) => {
-    const c = confirm(`Delete this user ${name} ?`);
+    const c = confirm(`Delete this station ${name} ?`);
     if (c) {
         router.delete(route(routeGroupName + '.destroy', id));
     }
@@ -96,14 +93,16 @@ const destroy = (id, name) => {
                             <Link :href="route(routeGroupName + '.edit', item.id)" class="btn btn-sm btn-link">
                             <i class="bi bi-pencil"></i>
                             </Link>
-                            <button v-if="item.id != $page.props.auth.user.id" @click="destroy(item.id, item.name)"
-                                class="btn btn-sm btn-link">
+                            <button @click="destroy(item.id, item.name)" class="btn btn-sm btn-link">
                                 <i class="bi bi-trash"></i>
                             </button>
                         </td>
-                        <td v-if="useUsername">{{ item.username }}</td>
+                        <td :class="item.active == 0 ? 'text-danger' : ''">{{ item.code }}</td>
                         <td>{{ item.name }}</td>
-                        <td>{{ item.email }}</td>
+                        <td>{{ item.max_pax }}</td>
+                        <td>{{ item.stay_duration_seconds }}</td>
+                        <td>{{ item.warning_below_seconds }}</td>
+                        <td>{{ item.disable_next_entry_seconds }}</td>
                         <td>{{ formatDate(item.created_at) }}</td>
                     </tr>
                 </tbody>

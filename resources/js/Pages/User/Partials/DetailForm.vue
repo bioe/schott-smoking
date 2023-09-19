@@ -14,6 +14,9 @@ const props = defineProps({
     },
     useUsername: {
         type: Boolean
+    },
+    hod_list: {
+        type: Boolean
     }
 });
 
@@ -25,6 +28,7 @@ const form = useForm({
     email: props.data.email ?? '',
     active: props.data.active,
     password: '',
+    hod_id: props.data.hod_id ?? null,
 });
 </script>
 
@@ -33,6 +37,12 @@ const form = useForm({
         @submit.prevent="data.id == null ? form.post(route(routeGroupName + '.store')) : form.patch(route(routeGroupName + '.update', data.id))">
 
         <div class="row g-3">
+            <div class="col-12">
+                <Checkbox id="checkActive" v-model:checked="form.active">
+                    Active
+                </Checkbox>
+            </div>
+
             <div v-if="useUsername" class="col-md-6">
                 <InputLabel for="username" value="Username" />
                 <TextInput id="username" type="text" v-model="form.username" :invalid="form.errors.username" required />
@@ -56,13 +66,19 @@ const form = useForm({
                 <TextInput id="name" type="text" v-model="form.name" :invalid="form.errors.name" required />
                 <InputError :message="form.errors.name" />
             </div>
-            <div class="col-12">
-                <Checkbox id="checkActive" v-model:checked="form.active">
-                    Active
-                </Checkbox>
+
+            <div class="col-md-6">
+                <InputLabel for="hod_name" value="HOD" />
+                <select class="form-select" name="hod_id" v-model="form.hod_id">
+                    <option :value=null>None</option>
+                    <option v-for=" h in hod_list " :value="h.id">{{ h.name }}</option>
+                </select>
+                <InputError :message="form.errors.hod_id" />
             </div>
+
             <div class="col-12">
-                <PrimaryButton type="submit" v-html="data.id == null ? 'Create' : 'Save'"></PrimaryButton>
+                <PrimaryButton type="submit" v-html="data.id == null ? 'Create' : 'Save'" :disabled="form.processing">
+                </PrimaryButton>
             </div>
         </div>
     </form>

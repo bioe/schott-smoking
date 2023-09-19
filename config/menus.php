@@ -21,16 +21,23 @@ return [
                     'route' => 'users.index'
                 ],
                 [
-                    'title' => 'Profile',
-                    'submenus' => [
-                        [
-                            'title' => 'Edit Profile',
-                            'route' => 'profile.edit'
-                        ]
-                    ]
+                    'title' => 'Stations',
+                    'route' => 'stations.index'
                 ],
             ]
-
-        ]
+        ],
+        [
+            'title' => 'HR',
+            'submenus' => [
+                [
+                    'title' => 'Employees',
+                    'route' => 'employees.index'
+                ],
+                [
+                    'title' => 'HODs',
+                    'route' => 'hods.index'
+                ],
+            ]
+        ],
     ]
 ];

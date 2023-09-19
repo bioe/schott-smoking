@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\UserUpdateRequest;
+use App\Models\Hod;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
@@ -24,7 +25,7 @@ class UserController extends Controller
         $list = User::query()->when(!empty($filters['keyword']), function ($q) use ($filters) {
             $q->orWhere('name', 'like', '%' . $filters['keyword'] . '%');
             $q->orWhere('email', 'like', '%' . $filters['keyword'] . '%');
-        })->filterSort($filters)->paginate(2);
+        })->filterSort($filters)->paginate(config('forms.paginate'));
 
         return Inertia::render('User/Index', [
             'header' => User::header(),
@@ -66,11 +67,13 @@ class UserController extends Controller
             $data = User::find($id);
         }
         $menu_list = config('menus.items');
+        $hod_list = Hod::all();
 
         return Inertia::render('User/Edit', [
             'data' => $data,
             'useUsername' => env(LOGIN_USERNAME, false),
             'menu_list' => $menu_list,
+            'hod_list' => $hod_list
         ]);
     }
 
@@ -97,6 +100,7 @@ class UserController extends Controller
 
     /**
      * Remove the specified resource from storage.
+     * Laravel10 must use $user (model name), cannot be other
      */
     public function destroy(User $user)
     {

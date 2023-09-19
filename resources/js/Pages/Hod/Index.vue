@@ -18,13 +18,10 @@ const props = defineProps({
         type: Object,
         default: () => ({}),
     },
-    useUsername: {
-        type: Boolean
-    }
 });
 
-const routeGroupName = 'users';
-const headerTitle = ref('Users');
+const routeGroupName = 'hods';
+const headerTitle = ref('HODs');
 const form = useForm(props.filters);
 
 const sort = (field) => {
@@ -40,7 +37,7 @@ const submit = () => {
 };
 
 const destroy = (id, name) => {
-    const c = confirm(`Delete this user ${name} ?`);
+    const c = confirm(`Delete this hod ${name} ?`);
     if (c) {
         router.delete(route(routeGroupName + '.destroy', id));
     }
@@ -65,6 +62,7 @@ const destroy = (id, name) => {
                                 placeholder="Keyword" autocomplete="off">
                             <label for="keywordInput">Keyword</label>
                         </div>
+
                     </div>
                     <div class="col-12">
                         <PrimaryButton type="submit" :disabled="form.processing">
@@ -96,14 +94,11 @@ const destroy = (id, name) => {
                             <Link :href="route(routeGroupName + '.edit', item.id)" class="btn btn-sm btn-link">
                             <i class="bi bi-pencil"></i>
                             </Link>
-                            <button v-if="item.id != $page.props.auth.user.id" @click="destroy(item.id, item.name)"
-                                class="btn btn-sm btn-link">
+                            <button @click="destroy(item.id, item.name)" class="btn btn-sm btn-link">
                                 <i class="bi bi-trash"></i>
                             </button>
                         </td>
-                        <td v-if="useUsername">{{ item.username }}</td>
                         <td>{{ item.name }}</td>
-                        <td>{{ item.email }}</td>
                         <td>{{ formatDate(item.created_at) }}</td>
                     </tr>
                 </tbody>

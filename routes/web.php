@@ -1,6 +1,9 @@
 <?php
 
+use App\Http\Controllers\EmployeeController;
+use App\Http\Controllers\HodController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\StationController;
 use App\Http\Controllers\UserController;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
@@ -40,6 +43,9 @@ Route::middleware('auth', 'admin')->group(function () {
         Route::patch('menu/{id}', [UserController::class, 'patchMenu'])->name('menu.update');
     });
     Route::resource('users', UserController::class);
+    Route::resource('stations', StationController::class);
+    Route::resource('hods', HodController::class);
+    Route::resource('employees', EmployeeController::class);
 });
 
 require __DIR__ . '/auth.php';

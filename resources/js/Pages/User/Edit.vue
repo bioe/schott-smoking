@@ -17,6 +17,9 @@ const props = defineProps({
     menu_list: {
         type: Array,
     },
+    hod_list: {
+        type: Object,
+    }
 });
 const routeGroupName = 'users';
 const headerTitle = ref('User');

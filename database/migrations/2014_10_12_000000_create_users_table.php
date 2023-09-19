@@ -19,7 +19,10 @@ return new class extends Migration
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password');
             $table->boolean('active')->nullable();
-            $table->text('menus')->nullable();
+            $table->text('menu_permission')->nullable();
+            $table->unsignedBigInteger('hod_id')->nullable();
+            $table->boolean('is_admin')->default(false);
+            $table->boolean('is_guard')->default(false);
             $table->rememberToken();
             $table->timestamps();
             $table->softDeletes();

@@ -18,13 +18,13 @@ const props = defineProps({
         type: Object,
         default: () => ({}),
     },
-    useUsername: {
-        type: Boolean
+    hod_list: {
+        type: Object,
     }
 });
 
-const routeGroupName = 'users';
-const headerTitle = ref('Users');
+const routeGroupName = 'employees';
+const headerTitle = ref('Employees');
 const form = useForm(props.filters);
 
 const sort = (field) => {
@@ -40,7 +40,7 @@ const submit = () => {
 };
 
 const destroy = (id, name) => {
-    const c = confirm(`Delete this user ${name} ?`);
+    const c = confirm(`Delete this employee ${name} ?`);
     if (c) {
         router.delete(route(routeGroupName + '.destroy', id));
     }
@@ -65,7 +65,19 @@ const destroy = (id, name) => {
                                 placeholder="Keyword" autocomplete="off">
                             <label for="keywordInput">Keyword</label>
                         </div>
+
                     </div>
+                    <div class="col-md-3">
+                        <div class="form-floating mb-3">
+                            <select v-model="form.hod_id" class="form-select">
+                                <option :value=null>All</option>
+                                <option v-for="h in hod_list" :value="h.id">{{ h.name }}</option>
+                                <option v-if="$page.props.auth.user.hod_id == null" :value="'is_null'">No HOD</option>
+                            </select>
+                            <label for="keywordInput">HOD</label>
+                        </div>
+                    </div>
+
                     <div class="col-12">
                         <PrimaryButton type="submit" :disabled="form.processing">
                             <i class="bi bi-search"></i>
@@ -96,14 +108,13 @@ const destroy = (id, name) => {
                             <Link :href="route(routeGroupName + '.edit', item.id)" class="btn btn-sm btn-link">
                             <i class="bi bi-pencil"></i>
                             </Link>
-                            <button v-if="item.id != $page.props.auth.user.id" @click="destroy(item.id, item.name)"
-                                class="btn btn-sm btn-link">
+                            <button @click="destroy(item.id, item.name)" class="btn btn-sm btn-link">
                                 <i class="bi bi-trash"></i>
                             </button>
                         </td>
-                        <td v-if="useUsername">{{ item.username }}</td>
+                        <td :class="item.active == 0 ? 'text-danger' : ''">{{ item.card_id }}</td>
                         <td>{{ item.name }}</td>
-                        <td>{{ item.email }}</td>
+                        <td>{{ item.hod?.name }}</td>
                         <td>{{ formatDate(item.created_at) }}</td>
                     </tr>
                 </tbody>

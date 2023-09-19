@@ -30,61 +30,86 @@ onMounted(
     <Head title="Dashboard" />
     <div class="container-fluid p-3 full-height">
         <div class="row">
-            <div class="col-lg-4">
-                <table class="table table-bordered table-striped">
-                    <thead>
-                        <tr class="schott-colour-dark text-light">
-                            <HeadRow width="20%">ID</HeadRow>
-                            <HeadRow>Name</HeadRow>
-                            <HeadRow width="10%">Remaining</HeadRow>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr v-for="(timer, index) in timers">
-                            <td>11111110101{{ index }}</td>
-                            <td>John {{ index }}</td>
-                            <td class="text-center">{{ timer.minutes }}:{{ timer.seconds.toLocaleString(undefined, {
-                                minimumIntegerDigits: 2
-                            }) }} </td>
-                        </tr>
+            <div class="col-lg-6">
+                <div class="h-100 p-3 box-bg border rounded-3">
+                    <table class="table table-bordered table-striped  table-dark">
+                        <thead>
+                            <tr class="schott-colour-dark text-light fs-3">
+                                <HeadRow width="20%">ID</HeadRow>
+                                <HeadRow>Name</HeadRow>
+                                <HeadRow width="10%">Remaining</HeadRow>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr v-for="(timer, index) in timers" class="fs-3">
+                                <td :class="index < 5 ? 'text-danger' : ''">00000001{{ index }}</td>
+                                <td :class="index < 5 ? 'text-danger' : ''">John {{ index }}</td>
+                                <td class="text-center" :class="index < 5 ? 'text-danger' : ''">{{ timer.minutes }}:{{
+                                    timer.seconds.toLocaleString(undefined, {
+                                        minimumIntegerDigits: 2
+                                    }) }} </td>
+                            </tr>
 
-                    </tbody>
-                </table>
+                        </tbody>
+                    </table>
+                </div>
 
             </div>
-            <div class="col-lg-8">
+            <div class="col-lg-6">
                 <div class="row mb-2">
-                    <div class="col-12">
-                        <div class="d-flex">
+                    <div class="h-100 p-3 box-bg border rounded-3">
+                        <!-- <div class="d-flex">
                             <div class="flex-shrink-1 me-2">
                                 <div class="square-badge schott-colour">
                                     15
                                 </div>
                             </div>
                             <div class="flex-fill">
-                                <Splide
-                                    :options="{ rewind: true, autoWidth: true, autoplay: true, interval: 1000, arrows: false }"
-                                    aria-label="My Favorite Images" style="height:100%">
-                                    <SplideSlide class="fs-3" style="width:100%">
-                                        Lorem ipsum is placeholder text commonly used in the graphic, print, and publishing
-                                        industries for previewing layouts and visual mockups.
-                                    </SplideSlide>
-                                    <SplideSlide class="fs-3" style="width:100%;">
-                                        Lorem ipsum is placeholder text commonly used in the graphic, print, and publishing
-                                        industries for previewing layouts and visual mockups.
-                                    </SplideSlide>
-                                    <SplideSlide class="fs-3" style="width:100%">
-                                        Lorem ipsum is placeholder text commonly used in the graphic, print, and publishing
-                                        industries for previewing layouts and visual mockups.
-                                    </SplideSlide>
-                                </Splide>
+
+                            </div>
+                        </div> -->
+                        <div class="row mb-2">
+                            <div class="col-lg-6 text-light">
+                                <h2>Pax</h2>
+                                <div class="sensor-column schott-colour text-center rounded-3">
+                                    15
+                                </div>
+                            </div>
+                            <div class="col-lg-6 text-light">
+                                <h2>Air Index</h2>
+                                <div class="sensor-column text-center rounded-3 bg-success">
+                                    15
+                                </div>
                             </div>
                         </div>
                     </div>
+
+                </div>
+                <div class="row mb-2">
+                    <div class="h-100 p-3 box-bg border rounded-3">
+                        <Splide :options="{ rewind: true, autoWidth: true, autoplay: true, interval: 1000, arrows: false }"
+                            aria-label="My Favorite Images" style="height:100%">
+                            <SplideSlide class="fs-4 text-light" style="width:100%">
+                                Lorem ipsum is placeholder text commonly used in the graphic, print, and
+                                publishing
+                                industries for previewing layouts and visual mockups.
+                            </SplideSlide>
+                            <SplideSlide class="fs-4 text-light" style="width:100%;">
+                                Lorem ipsum is placeholder text commonly used in the graphic, print, and
+                                publishing industries for previewing layouts and visual mockups.
+                            </SplideSlide>
+                            <SplideSlide class="fs-4 text-light" style="width:100%">
+                                Lorem ipsum is placeholder text commonly used in the graphic, print, and
+                                publishing
+                                industries for previewing layouts and visual mockups.
+                            </SplideSlide>
+                        </Splide>
+                    </div>
                 </div>
 
-                <div class="row schott-bg">
-                    <div class="col-12">
+                <div class="row">
+
+                    <div class="h-100 p-3 box-bg border rounded-3">
                         <Splide :options="{
                             type: 'loop',
                             direction: 'ttb',
@@ -108,6 +133,7 @@ onMounted(
                             </SplideSlide>
                         </Splide>
                     </div>
+
                 </div>
             </div>
         </div>

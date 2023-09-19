@@ -24,7 +24,8 @@ class User extends Authenticatable //implements MustVerifyEmail
         'name',
         'email',
         'password',
-        'active'
+        'active',
+        'hod_id'
     ];
 
     /**
@@ -136,6 +137,9 @@ class User extends Authenticatable //implements MustVerifyEmail
         $data = empty($data) ? config('menus.items') : $data;
         if ($user_menu != null) {
             foreach ($data as $index => $item) {
+                //Always return dashboard
+                if (isset($item['route']) && $item['route'] == "dashboard") continue;
+
                 if (isset($item['route'])) {
                     //Got route
                     $name = substr($item['route'], 0, strrpos($item['route'], ".")); //Remove .index
@@ -155,6 +159,7 @@ class User extends Authenticatable //implements MustVerifyEmail
                 }
             }
         }
-        return $data;
+
+        return array_values($data);
     }
 }

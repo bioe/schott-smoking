@@ -80,7 +80,6 @@ const removeAll = () => {
                                     {{ menu.title }}
                                 </Checkbox>
                                 <span></span>
-                                here
                             </template>
                             <template v-else>
                                 <input type="hidden" :name="'form.menus[' + (menu.title) + '][active]'" value="0">
