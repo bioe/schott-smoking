@@ -20,7 +20,7 @@ class EmployeeController extends Controller
         //Build Filter
         $filters = $this->filterSessions($request, 'employee', [
             'keyword' => '',
-            'hod_id' => '',
+            'hod_id' => null,
         ]);
         $list = Employee::query()->with('hod')->when(!empty($filters['keyword']), function ($q) use ($filters) {
             $q->orWhere('name', 'like', '%' . $filters['keyword'] . '%');

@@ -39,5 +39,9 @@ return [
                 ],
             ]
         ],
+        [
+            'title' => 'Entry Log',
+            'route' => 'entrylogs.index'
+        ],
     ]
 ];

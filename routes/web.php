@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\EmployeeController;
+use App\Http\Controllers\EntryLogController;
 use App\Http\Controllers\HodController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\StationController;
@@ -46,6 +47,7 @@ Route::middleware('auth', 'admin')->group(function () {
     Route::resource('stations', StationController::class);
     Route::resource('hods', HodController::class);
     Route::resource('employees', EmployeeController::class);
+    Route::resource('entrylogs', EntryLogController::class);
 });
 
 require __DIR__ . '/auth.php';

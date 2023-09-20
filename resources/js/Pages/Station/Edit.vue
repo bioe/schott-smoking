@@ -69,7 +69,7 @@ const form = useForm({
                                 <div class="col-md-6">
                                     <InputLabel for="code" value="Code" />
                                     <TextInput id="code" type="text" v-model="form.code" :invalid="form.errors.code"
-                                        required />
+                                        :disabled="data.id != null" required />
                                     <InputError :message="form.errors.code" />
                                 </div>
                                 <div class="col-md-6">
