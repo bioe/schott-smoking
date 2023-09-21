@@ -20,8 +20,8 @@ const props = defineProps({
     },
 });
 
-const routeGroupName = 'hods';
-const headerTitle = ref('HODs');
+const routeGroupName = 'costcenters';
+const headerTitle = ref('Cost Centers');
 const form = useForm(props.filters);
 
 const sort = (field) => {
@@ -37,7 +37,7 @@ const submit = () => {
 };
 
 const destroy = (id, name) => {
-    const c = confirm(`Delete this hod ${name} ?`);
+    const c = confirm(`Delete this cost center ${name} ?`);
     if (c) {
         router.delete(route(routeGroupName + '.destroy', id));
     }
@@ -94,11 +94,11 @@ const destroy = (id, name) => {
                             <Link :href="route(routeGroupName + '.edit', item.id)" class="btn btn-sm btn-link">
                             <i class="bi bi-pencil"></i>
                             </Link>
-                            <button @click="destroy(item.id, item.name)" class="btn btn-sm btn-link">
+                            <button @click="destroy(item.id, item.code)" class="btn btn-sm btn-link">
                                 <i class="bi bi-trash"></i>
                             </button>
                         </td>
-                        <td>{{ item.name }}</td>
+                        <td>{{ item.code }}</td>
                         <td>{{ formatDate(item.created_at) }}</td>
                     </tr>
                 </tbody>

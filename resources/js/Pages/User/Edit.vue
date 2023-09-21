@@ -17,7 +17,7 @@ const props = defineProps({
     menu_list: {
         type: Array,
     },
-    hod_list: {
+    cost_center_list: {
         type: Object,
     }
 });

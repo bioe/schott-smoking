@@ -59,6 +59,15 @@ class EntryLog extends BaseModel
         return $query->whereNotNull('enter_time')->whereNull('exit_time');
     }
 
+    public function scopeByCostCenter($query, User $user)
+    {
+        return $query->when($user != null && $user->cost_center_id != null, function ($q) use ($user) {
+            $q->whereHas('employee', function ($q) use ($user) {
+                $q->where('cost_center_id', $user->cost_center_id);
+            });
+        });
+    }
+
     //Static Functions Below Here
 
     /*
@@ -68,10 +77,12 @@ class EntryLog extends BaseModel
     {
         $headers = array();
         return array_merge($headers, [
-            ['field' => 'user.name', 'title' => 'Name', 'sortable' => true],
+            ['field' => 'employee.card_id', 'title' => 'Card', 'sortable' => true],
+            ['field' => 'employee.name', 'title' => 'Name', 'sortable' => true],
             ['field' => 'station.name', 'title' => 'Station', 'sortable' => true],
             ['field' => 'enter_time', 'title' => 'Entry', 'sortable' => true],
             ['field' => 'exit_time', 'title' => 'Exit', 'sortable' => true],
+            ['field' => 'stay_duration_seconds', 'title' => 'Duration', 'sortable' => true],
         ]);
     }
 }

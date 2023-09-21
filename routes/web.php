@@ -2,7 +2,7 @@
 
 use App\Http\Controllers\EmployeeController;
 use App\Http\Controllers\EntryLogController;
-use App\Http\Controllers\HodController;
+use App\Http\Controllers\CostCenterController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\StationController;
 use App\Http\Controllers\UserController;
@@ -45,7 +45,7 @@ Route::middleware('auth', 'admin')->group(function () {
     });
     Route::resource('users', UserController::class);
     Route::resource('stations', StationController::class);
-    Route::resource('hods', HodController::class);
+    Route::resource('costcenters', CostCenterController::class);
     Route::resource('employees', EmployeeController::class);
     Route::resource('entrylogs', EntryLogController::class);
 });

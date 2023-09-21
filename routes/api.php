@@ -19,5 +19,5 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
 
-Route::post('enter_door', [AccessController::class, 'enter_door']);
-Route::post('exit_door', [AccessController::class, 'exit_door']);
+Route::post('/access/enter_door', [AccessController::class, 'enter_door']);
+Route::post('/access/exit_door', [AccessController::class, 'exit_door']);

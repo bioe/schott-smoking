@@ -4,7 +4,7 @@ namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class HodUpdateRequest extends FormRequest
+class CostCenterUpdateRequest extends FormRequest
 {
     /**
      * Get the validation rules that apply to the request.
@@ -16,7 +16,7 @@ class HodUpdateRequest extends FormRequest
         //$this->employee = id //Auto from laravel
         $rules = [];
         return  array_merge($rules, [
-            'name' => ['string', 'max:255'],
+            'code' => ['string', 'max:255'],
         ]);
     }
 }

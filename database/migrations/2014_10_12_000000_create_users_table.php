@@ -20,7 +20,7 @@ return new class extends Migration
             $table->string('password');
             $table->boolean('active')->nullable();
             $table->text('menu_permission')->nullable();
-            $table->unsignedBigInteger('hod_id')->nullable();
+            $table->unsignedBigInteger('cost_center_id')->nullable();
             $table->boolean('is_admin')->default(false);
             $table->boolean('is_guard')->default(false);
             $table->rememberToken();

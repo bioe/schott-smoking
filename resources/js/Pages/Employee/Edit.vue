@@ -13,7 +13,7 @@ const props = defineProps({
         type: Object,
         default: () => ({}),
     },
-    hod_list: {
+    cost_center_list: {
         type: Object,
     }
 });
@@ -24,7 +24,7 @@ const headerTitle = ref('Employee');
 const form = useForm({
     card_id: props.data.card_id ?? '',
     name: props.data.name ?? '',
-    hod_id: props.data.hod_id ?? null,
+    cost_center_id: props.data.cost_center_id ?? null,
     active: props.data.active,
     maintenance: props.data.maintenance
 });
@@ -80,12 +80,12 @@ const form = useForm({
                                 </div>
 
                                 <div class="col-md-4">
-                                    <InputLabel for="hod_name" value="HOD" />
-                                    <select class="form-select" name="hod_id" v-model="form.hod_id">
+                                    <InputLabel for="cost_center_id" value="Cost Center" />
+                                    <select class="form-select" name="cost_center_id" v-model="form.cost_center_id">
                                         <option :value=null>None</option>
-                                        <option v-for=" h in hod_list " :value="h.id">{{ h.name }}</option>
+                                        <option v-for=" cc in cost_center_list " :value="cc.id">{{ cc.code }}</option>
                                     </select>
-                                    <InputError :message="form.errors.hod_id" />
+                                    <InputError :message="form.errors.cost_center_id" />
                                 </div>
 
                                 <div class="col-12">

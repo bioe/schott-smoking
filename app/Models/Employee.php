@@ -17,7 +17,7 @@ class Employee extends BaseModel
     protected $fillable = [
         'card_id',
         'name',
-        'hod_id',
+        'cost_center_id',
         'maintenance',
         'origin_id',
         'active'
@@ -46,16 +46,16 @@ class Employee extends BaseModel
         );
     }
 
-    public function hod()
+    public function cost_center()
     {
-        return $this->belongsTo(Hod::class);
+        return $this->belongsTo(CostCenter::class);
     }
 
-    //View related HOD Employee Only
-    public function scopeByHod($query, User $user)
+    //View related Cost Center Employee Only
+    public function scopeByCostCenter($query, User $user)
     {
-        return $query->when($user != null && $user->hod_id != null, function ($q) use ($user) {
-            $q->where('hod_id', $user->hod_id);
+        return $query->when($user != null && $user->cost_center_id != null, function ($q) use ($user) {
+            $q->where('cost_center_id', $user->cost_center_id);
         });
     }
 
@@ -70,7 +70,7 @@ class Employee extends BaseModel
         return array_merge($headers, [
             ['field' => 'card_id', 'title' => 'Card ID', 'sortable' => true],
             ['field' => 'name', 'title' => 'Name', 'sortable' => true],
-            ['field' => 'hod_id', 'title' => 'HOD'],
+            ['field' => 'cost_center_id', 'title' => 'Cost Center'],
             ['field' => 'created_at', 'title' => 'Created At', 'sortable' => true],
         ]);
     }

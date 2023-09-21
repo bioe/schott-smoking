@@ -17,7 +17,7 @@ return new class extends Migration
             $table->string('name');
             $table->boolean('maintenance')->default(false); //Maintenance user, bypass checking
             $table->unsignedBigInteger('origin_id')->nullable();
-            $table->unsignedBigInteger('hod_id')->index('hod_id')->nullable();
+            $table->unsignedBigInteger('cost_center_id')->index('cost_center_id')->nullable();
             $table->boolean('active')->default(false);
             $table->timestamps();
             $table->softDeletes();

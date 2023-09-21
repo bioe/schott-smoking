@@ -2,9 +2,11 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\HodUpdateRequest;
+use App\Http\Requests\CostCenterUpdateRequest;
 use App\Models\EntryLog;
+use App\Models\Station;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Redirect;
 use Inertia\Inertia;
 
@@ -16,18 +18,36 @@ class EntryLogController extends Controller
     public function index(Request $request)
     {
         //Build Filter
-        $filters = $this->filterSessions($request, 'hod', [
-            'keyword' => ''
+        $filters = $this->filterSessions($request, 'entrylog', [
+            'keyword' => null,
+            'start' => null,
+            'end' => null,
+            'station_id' => null,
+            'overstay' => false
         ]);
 
-        $list = EntryLog::query()->when(!empty($filters['keyword']), function ($q) use ($filters) {
-            $q->orWhere('name', 'like', '%' . $filters['keyword'] . '%');
-        })->filterSort($filters)->paginate(config('forms.paginate'));
+        $list = EntryLog::with(['employee', 'station'])
+            ->when(!empty($filters['keyword']), function ($q) use ($filters) {
+                $q->whereHas('employee', function ($q) use ($filters) {
+                    $q->where(function ($q) use ($filters) {
+                        $q->orWhere('name', 'like', '%' . $filters['keyword'] . '%');
+                        $q->orWhere('card_id', 'like', '%' . $filters['keyword'] . '%');
+                    });
+                });
+            })->when(!empty($filters['start']), function ($q)  use ($filters) {
+                $q->startOfDay('enter_time', $filters['start']);
+            })->when(!empty($filters['end']), function ($q)  use ($filters) {
+                $q->endOfDay('exit_time', $filters['end']);
+            })->byCostCenter(Auth::user())->filterSort($filters)->orderBy('created_at', 'desc')->paginate(config('forms.paginate'));
+
+
+        $station_list = Station::all();
 
         return Inertia::render('EntryLog/Index', [
             'header' => EntryLog::header(),
             'filters' => $filters,
             'list' => $list,
+            'station_list' => $station_list
         ]);
     }
 
@@ -42,7 +62,7 @@ class EntryLogController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(HodUpdateRequest $request)
+    public function store(CostCenterUpdateRequest $request)
     {
         return $this->update($request, null);
     }
@@ -57,30 +77,13 @@ class EntryLogController extends Controller
 
     public function edit(string $id = null)
     {
-        if (null == $id) {
-            $data = new EntryLog;
-        } else {
-            $data = EntryLog::find($id);
-        }
-
-        return Inertia::render('EntryLog/Edit', [
-            'data' => $data,
-        ]);
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(HodUpdateRequest $request, string $id = null)
+    public function update(CostCenterUpdateRequest $request, string $id = null)
     {
-        $data = $request->validated();
-        if (null == $id) {
-            $data = EntryLog::create($data);
-            return Redirect::route('entrylogs.edit', $data->id)->with('message', 'HOD created successfully');
-        } else {
-            EntryLog::find($id)->update($data);
-            return Redirect::route('entrylogs.edit', $id)->with('message', 'HOD updated successfully');
-        }
     }
 
     /**

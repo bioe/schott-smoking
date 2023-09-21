@@ -2,13 +2,13 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\HodUpdateRequest;
-use App\Models\Hod;
+use App\Http\Requests\CostCenterUpdateRequest;
+use App\Models\CostCenter;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Redirect;
 use Inertia\Inertia;
 
-class HodController extends Controller
+class CostCenterController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -16,16 +16,16 @@ class HodController extends Controller
     public function index(Request $request)
     {
         //Build Filter
-        $filters = $this->filterSessions($request, 'hod', [
-            'keyword' => ''
+        $filters = $this->filterSessions($request, 'costcenter', [
+            'keyword' => null
         ]);
 
-        $list = Hod::query()->when(!empty($filters['keyword']), function ($q) use ($filters) {
+        $list = CostCenter::query()->when(!empty($filters['keyword']), function ($q) use ($filters) {
             $q->orWhere('name', 'like', '%' . $filters['keyword'] . '%');
         })->filterSort($filters)->paginate(config('forms.paginate'));
 
-        return Inertia::render('Hod/Index', [
-            'header' => Hod::header(),
+        return Inertia::render('CostCenter/Index', [
+            'header' => CostCenter::header(),
             'filters' => $filters,
             'list' => $list,
         ]);
@@ -42,7 +42,7 @@ class HodController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(HodUpdateRequest $request)
+    public function store(CostCenterUpdateRequest $request)
     {
         return $this->update($request, null);
     }
@@ -58,12 +58,12 @@ class HodController extends Controller
     public function edit(string $id = null)
     {
         if (null == $id) {
-            $data = new Hod;
+            $data = new CostCenter;
         } else {
-            $data = Hod::find($id);
+            $data = CostCenter::find($id);
         }
 
-        return Inertia::render('Hod/Edit', [
+        return Inertia::render('CostCenter/Edit', [
             'data' => $data,
         ]);
     }
@@ -71,24 +71,24 @@ class HodController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(HodUpdateRequest $request, string $id = null)
+    public function update(CostCenterUpdateRequest $request, string $id = null)
     {
         $data = $request->validated();
         if (null == $id) {
-            $data = Hod::create($data);
-            return Redirect::route('hods.edit', $data->id)->with('message', 'HOD created successfully');
+            $data = CostCenter::create($data);
+            return Redirect::route('costcenters.edit', $data->id)->with('message', 'Cost Center created successfully');
         } else {
-            Hod::find($id)->update($data);
-            return Redirect::route('hods.edit', $id)->with('message', 'HOD updated successfully');
+            CostCenter::find($id)->update($data);
+            return Redirect::route('costcenters.edit', $id)->with('message', 'Cost Center updated successfully');
         }
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Hod $hod)
+    public function destroy(CostCenter $costCenter)
     {
-        $hod->delete();
-        return Redirect::route('hods.index')->with('message', 'HOD deleted successfully');
+        $costCenter->delete();
+        return Redirect::route('costcenters.index')->with('message', 'Cost Center deleted successfully');
     }
 }

@@ -11,9 +11,10 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('hod', function (Blueprint $table) {
+        Schema::create('cost_centers', function (Blueprint $table) {
             $table->id();
-            $table->string('name');
+            $table->string('code');
+            $table->string('name')->nullable();
             $table->timestamps();
         });
     }
@@ -23,6 +24,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('hod');
+        Schema::dropIfExists('cost_centers');
     }
 };

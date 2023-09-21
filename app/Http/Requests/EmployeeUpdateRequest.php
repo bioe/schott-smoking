@@ -20,7 +20,7 @@ class EmployeeUpdateRequest extends FormRequest
         return  array_merge($rules, [
             'card_id' => ['string', 'max:255', Rule::unique(Employee::class)->ignore($this->employee)],
             'name' => ['string', 'max:255'],
-            'hod_id' => ['nullable'],
+            'cost_center_id' => ['nullable'],
             'active' => ['boolean'],
             'maintenance' => ['boolean'],
         ]);

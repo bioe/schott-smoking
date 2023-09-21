@@ -18,7 +18,7 @@ const props = defineProps({
         type: Object,
         default: () => ({}),
     },
-    hod_list: {
+    cost_center_list: {
         type: Object,
     }
 });
@@ -69,12 +69,14 @@ const destroy = (id, name) => {
                     </div>
                     <div class="col-md-3">
                         <div class="form-floating mb-3">
-                            <select v-model="form.hod_id" class="form-select">
+                            <select v-model="form.cost_center_id" class="form-select">
                                 <option :value=null>All</option>
-                                <option v-for="h in hod_list" :value="h.id">{{ h.name }}</option>
-                                <option v-if="$page.props.auth.user.hod_id == null" :value="'is_null'">No HOD</option>
+                                <option v-for="cc in cost_center_list" :value="cc.id">{{ cc.code }}</option>
+                                <option v-if="$page.props.auth.user.cost_center_id == null" :value="'is_null'">No Cost
+                                    Center
+                                </option>
                             </select>
-                            <label for="keywordInput">HOD</label>
+                            <label for="keywordInput">Cost Center</label>
                         </div>
                     </div>
 
@@ -114,7 +116,7 @@ const destroy = (id, name) => {
                         </td>
                         <td :class="item.active == 0 ? 'text-danger' : ''">{{ item.card_id }}</td>
                         <td>{{ item.name }}</td>
-                        <td>{{ item.hod?.name }}</td>
+                        <td>{{ item.cost_center?.code }}</td>
                         <td>{{ formatDate(item.created_at) }}</td>
                     </tr>
                 </tbody>

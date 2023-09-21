@@ -15,11 +15,11 @@ const props = defineProps({
     },
 });
 
-const routeGroupName = 'hods';
-const headerTitle = ref('HOD');
+const routeGroupName = 'costcenters';
+const headerTitle = ref('Cost Center');
 
 const form = useForm({
-    name: props.data.name ?? '',
+    code: props.data.code ?? '',
 });
 
 // const submit = () => {
@@ -55,10 +55,10 @@ const form = useForm({
                         <div class="tab-pane fade pt-10 show active" id="tab_1" role="tabpanel" aria-labelledby="tab_1">
                             <div class="row g-3">
                                 <div class="col-md-4">
-                                    <InputLabel for="name" value="Name" />
-                                    <TextInput id="name" type="text" v-model="form.name" :invalid="form.errors.name"
+                                    <InputLabel for="code" value="Code" />
+                                    <TextInput id="code" type="text" v-model="form.code" :invalid="form.errors.code"
                                         required />
-                                    <InputError :message="form.errors.name" />
+                                    <InputError :message="form.errors.code" />
                                 </div>
                             </div>
                         </div>

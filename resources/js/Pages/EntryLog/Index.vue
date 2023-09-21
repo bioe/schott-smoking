@@ -18,6 +18,9 @@ const props = defineProps({
         type: Object,
         default: () => ({}),
     },
+    station_list: {
+        type: Object,
+    }
 });
 
 const routeGroupName = 'entrylogs';
@@ -36,12 +39,7 @@ const submit = () => {
     });
 };
 
-const destroy = (id, name) => {
-    const c = confirm(`Delete this hod ${name} ?`);
-    if (c) {
-        router.delete(route(routeGroupName + '.destroy', id));
-    }
-};
+
 </script>
 
 <template>
@@ -62,7 +60,30 @@ const destroy = (id, name) => {
                                 placeholder="Keyword" autocomplete="off">
                             <label for="keywordInput">Keyword</label>
                         </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="form-floating mb-3">
+                            <input v-model="form.start" type="date" class="form-control" id="startInput" placeholder="Start"
+                                autocomplete="off">
+                            <label for="startInput">Entry</label>
+                        </div>
 
+                    </div>
+                    <div class="col-md-3">
+                        <div class="form-floating mb-3">
+                            <input v-model="form.end" type="date" class="form-control" id="endInput" placeholder="End"
+                                autocomplete="off">
+                            <label for="endInput">Exit</label>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="form-floating mb-3">
+                            <select v-model="form.station_id" class="form-select">
+                                <option :value=null>All</option>
+                                <option v-for="station in station_list" :value="station.id">{{ station.name }}</option>
+                            </select>
+                            <label for="stationInput">Station</label>
+                        </div>
                     </div>
                     <div class="col-12">
                         <PrimaryButton type="submit" :disabled="form.processing">
@@ -83,23 +104,24 @@ const destroy = (id, name) => {
             <table class="table table-bordered table-striped table-hover">
                 <thead>
                     <tr>
-                        <HeadRow>Actions</HeadRow>
+                        <!-- <HeadRow>Actions</HeadRow> -->
                         <HeadRow v-for="head in header" :field="head.field" :sort="head.sortable ? filters.sort : null"
                             @sortEvent="sort" :disabled="form.processing">{{ head.title }}</HeadRow>
                     </tr>
                 </thead>
                 <tbody>
                     <tr v-for="(item, index) in list.data">
-                        <td width="10%">
-                            <!-- <Link :href="route(routeGroupName + '.edit', item.id)" class="btn btn-sm btn-link">
-                            <i class="bi bi-pencil"></i>
-                            </Link> -->
+                        <!-- <td width="10%">
                             <button @click="destroy(item.id, item.name)" class="btn btn-sm btn-link">
                                 <i class="bi bi-trash"></i>
                             </button>
-                        </td>
-                        <td>{{ item.name }}</td>
-                        <td>{{ formatDate(item.created_at) }}</td>
+                        </td> -->
+                        <td>{{ item.employee?.card_id }}</td>
+                        <td>{{ item.employee?.name }}</td>
+                        <td>{{ item.station?.name }}</td>
+                        <td>{{ formatDate(item.enter_time) }}</td>
+                        <td>{{ formatDate(item.exit_time) }}</td>
+                        <td :class="item.overstay_seconds > 0 ? 'text-danger' : ''">{{ item.stay_duration_seconds }}</td>
                     </tr>
                 </tbody>
             </table>

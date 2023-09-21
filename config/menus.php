@@ -34,8 +34,8 @@ return [
                     'route' => 'employees.index'
                 ],
                 [
-                    'title' => 'HODs',
-                    'route' => 'hods.index'
+                    'title' => 'Cost Center',
+                    'route' => 'costcenters.index'
                 ],
             ]
         ],

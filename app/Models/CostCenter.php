@@ -2,18 +2,16 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\SoftDeletes;
 
-class Hod extends BaseModel
+class CostCenter extends BaseModel
 {
-    public $table = "hod";
-
     /**
      * The attributes that are mass assignable.
      *
      * @var array<int, string>
      */
     protected $fillable = [
+        'code',
         'name',
     ];
 
@@ -26,16 +24,16 @@ class Hod extends BaseModel
     {
         $headers = array();
         return array_merge($headers, [
-            ['field' => 'name', 'title' => 'Name', 'sortable' => true],
+            ['field' => 'code', 'title' => 'Code', 'sortable' => true],
             ['field' => 'created_at', 'title' => 'Created At', 'sortable' => true],
         ]);
     }
 
-    //View related HOD Employee Only
-    public function scopeByHod($query, User $user)
+    //View related Cost Center Employee Only
+    public function scopeByCostCenter($query, User $user)
     {
-        return $query->when($user != null && $user->hod_id != null, function ($q) use ($user) {
-            $q->where('id', $user->hod_id);
+        return $query->when($user != null && $user->cost_center_id != null, function ($q) use ($user) {
+            $q->where('id', $user->cost_center_id);
         });
     }
 }

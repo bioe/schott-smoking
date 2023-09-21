@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\EmployeeUpdateRequest;
 use App\Models\Employee;
-use App\Models\Hod;
+use App\Models\CostCenter;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Redirect;
 use Inertia\Inertia;
@@ -19,23 +19,23 @@ class EmployeeController extends Controller
     {
         //Build Filter
         $filters = $this->filterSessions($request, 'employee', [
-            'keyword' => '',
-            'hod_id' => null,
+            'keyword' => null,
+            'cost_center_id' => null,
         ]);
-        $list = Employee::query()->with('hod')->when(!empty($filters['keyword']), function ($q) use ($filters) {
+        $list = Employee::query()->with('cost_center')->when(!empty($filters['keyword']), function ($q) use ($filters) {
             $q->orWhere('name', 'like', '%' . $filters['keyword'] . '%');
             $q->orWhere('card_id', 'like', '%' . $filters['keyword'] . '%');
-        })->when(!empty($filters['hod_id']), function ($q) use ($filters) {
-            $filters['hod_id'] == 'is_null' ?  $q->whereNull('hod_id') : $q->where('hod_id',  $filters['hod_id']);
-        })->byHod(Auth::user())->filterSort($filters)->paginate(config('forms.paginate'));
+        })->when(!empty($filters['cost_center_id']), function ($q) use ($filters) {
+            $filters['cost_center_id'] == 'is_null' ?  $q->whereNull('cost_center_id') : $q->where('cost_center_id',  $filters['cost_center_id']);
+        })->byCostCenter(Auth::user())->filterSort($filters)->paginate(config('forms.paginate'));
 
-        $hod_list = Hod::byHod(Auth::user())->get();
+        $cost_center_list = CostCenter::byCostCenter(Auth::user())->get();
 
         return Inertia::render('Employee/Index', [
             'header' => Employee::header(),
             'filters' => $filters,
             'list' => $list,
-            'hod_list' => $hod_list
+            'cost_center_list' => $cost_center_list
         ]);
     }
 
@@ -70,11 +70,11 @@ class EmployeeController extends Controller
         } else {
             $data = Employee::find($id);
         }
-        $hod_list = Hod::byHod(Auth::user())->get();
+        $cost_center_list = CostCenter::byCostCenter(Auth::user())->get();
 
         return Inertia::render('Employee/Edit', [
             'data' => $data,
-            'hod_list' => $hod_list,
+            'cost_center_list' => $cost_center_list,
         ]);
     }
 

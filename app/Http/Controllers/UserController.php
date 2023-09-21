@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\UserUpdateRequest;
-use App\Models\Hod;
+use App\Models\CostCenter;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
@@ -67,13 +67,13 @@ class UserController extends Controller
             $data = User::find($id);
         }
         $menu_list = config('menus.items');
-        $hod_list = Hod::all();
+        $cost_center_list = CostCenter::all();
 
         return Inertia::render('User/Edit', [
             'data' => $data,
             'useUsername' => env(LOGIN_USERNAME, false),
             'menu_list' => $menu_list,
-            'hod_list' => $hod_list
+            'cost_center_list' => $cost_center_list
         ]);
     }
 
