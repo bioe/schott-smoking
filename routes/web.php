@@ -2,13 +2,13 @@
 
 use App\Http\Controllers\AnnoucementController;
 use App\Http\Controllers\AreaController;
+use App\Http\Controllers\BannerController;
 use App\Http\Controllers\EmployeeController;
 use App\Http\Controllers\EntryLogController;
 use App\Http\Controllers\CostCenterController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\StationController;
 use App\Http\Controllers\UserController;
-use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 
@@ -57,6 +57,7 @@ Route::middleware('auth', 'admin')->group(function () {
     Route::resource('employees', EmployeeController::class);
     Route::resource('entrylogs', EntryLogController::class);
     Route::resource('annoucements', AnnoucementController::class);
+    Route::resource('banners', BannerController::class);
 });
 
 require __DIR__ . '/auth.php';

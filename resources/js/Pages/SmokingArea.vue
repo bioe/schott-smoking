@@ -24,6 +24,10 @@ const props = defineProps({
     banner_interval: {
         type: Number
     },
+    banner_list: {
+        type: Object
+    },
+    banner_last_update: { type: String },
 });
 
 const list = ref([]);
@@ -37,6 +41,7 @@ const extensions = { Video }
 //Banner
 const options = {
     type: "loop",
+    focus: 'center',
     video: {
         loop: false,
         mute: true,
@@ -54,14 +59,12 @@ onMounted(
             });
 
             splide_banner.value.splide.on('moved', (index) => {
-                //Not video then wait for banner_interval
-                let data = splide_banner.value.splide.Components.Elements.slides[index].getAttribute('data-isvideo');
-                if (data == "false") {
-                    setTimeout(() => {
-                        splide_banner.value.splide.go('>');
-                    }, props.banner_interval);
-                }
+                console.log("moved");
+                bannerNextSlide(index);
             });
+
+            //Start first check, if first is image need manual slide
+            bannerNextSlide(0);
         }
 
         //Initialize
@@ -71,6 +74,16 @@ onMounted(
 
     }
 )
+
+function bannerNextSlide(index) {
+    //Not video then wait for banner_interval
+    let data = splide_banner.value.splide.Components.Elements.slides[index].getAttribute('data-isvideo');
+    if (data == "false") {
+        setTimeout(() => {
+            splide_banner.value.splide.go('>');
+        }, props.banner_interval);
+    }
+}
 
 function updateDateTime() {
     currentDate.value = new Date();
@@ -87,6 +100,12 @@ function refresh() {
 
         if (props.annoucement_last_update != response.data.annoucement_last_update) {
             //New Annoucement
+            reloadPage();
+            return;
+        }
+
+        if (props.banner_last_update != response.data.banner_last_update) {
+            //New Banner
             reloadPage();
             return;
         }
@@ -204,15 +223,23 @@ const air_quality_bg = computed(() => {
                 </div>
             </div>
             <div class="col-lg-6">
-                <Splide ref="splide_banner" aria-labelledby="video-example-heading" :options="options"
+                <Splide ref="splide_banner" aria-labelledby="video-image-slider" :options="options"
                     :extensions="extensions">
-                    <SplideSlide v-for="( id, index ) in videos" :key="id"
-                        :data-splide-html-video="'http://localhost:8000/storage/schott.mp4'" data-isvideo="true">
-                        <img :src="`https://i3.ytimg.com/vi/${id}/maxresdefault.jpg`" :alt="`YouTube Sample ${index + 1}`">
+                    <template v-for="banner in banner_list">
+                        <SplideSlide v-if="banner.type == 'video'" :data-splide-html-video="banner.full_path"
+                            data-isvideo="true">
+                            <img :src="`/assets/play-icon.png`" />
+                        </SplideSlide>
+                        <SplideSlide v-else data-isvideo="false">
+                            <img :src="banner.full_path">
+                        </SplideSlide>
+                    </template>
+                    <!-- <SplideSlide :data-splide-html-video="'http://localhost:8000/storage/schott.mp4'" data-isvideo="true">
+                        <img :src="`/assets/play-icon.png`" />
                     </SplideSlide>
                     <SplideSlide data-isvideo="false">
                         <img src="/storage/image3.jpg">
-                    </SplideSlide>
+                    </SplideSlide> -->
                 </Splide>
             </div>
         </div>

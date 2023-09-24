@@ -41,3 +41,76 @@ if (!function_exists('date_extract_format')) {
         return preg_match('/\d/', $d) ? $null : $d;
     }
 }
+
+
+if (!function_exists('imgSanitize')) {
+    function imgSanitize($file, $thumbwidth = 2000, $thumbheight = 2000, $quality = 90)
+    {
+        $extension = $file->extension();
+        $path = $file->path();
+        // Load image and get image size.
+        $img = @imagecreatefromjpeg($path);
+        if (!$img) {
+            $img = @imagecreatefrompng($path);
+        }
+        if (!$img) {
+            // unable to recognize image
+            throw new \Exception("Error Processing Image", 500);
+            return;
+        }
+
+        $width = imagesx($img);
+        $height = imagesy($img);
+        if ($width <= $thumbwidth && $height <= $thumbheight) {
+            // no need to resize
+            imagedestroy($img);
+            unset($img);
+            return;
+        }
+        if ($width > $height) {
+            $newwidth = $thumbwidth;
+            $divisor = $width / $thumbwidth;
+            $newheight = floor($height / $divisor);
+        } else {
+            $newheight = $thumbheight;
+            $divisor = $height / $thumbheight;
+            $newwidth = floor($width / $divisor);
+        }
+        // Create a new temporary image.
+        $tmpimg = imagecreatetruecolor($newwidth, $newheight);
+        // Copy and resize old image into new image.
+        imagecopyresampled($tmpimg, $img, 0, 0, 0, 0, $newwidth, $newheight, $width, $height);
+
+        //Rotate image from phone orientation
+        if (function_exists('exif_read_data')) {
+            if (in_array($extension, ["jpg", "jpeg"]) && exif_imagetype($path) === IMAGETYPE_JPEG) {
+                $exif = @exif_read_data($path);
+                if ($exif && isset($exif['Orientation'])) {
+                    $orientation = $exif['Orientation'];
+                    if (1 != $orientation) {
+                        $deg = 0;
+                        switch ($orientation) {
+                            case 3:
+                                $deg = 180;
+                                break;
+                            case 6:
+                                $deg = 270;
+                                break;
+                            case 8:
+                                $deg = 90;
+                                break;
+                        }
+                        if ($deg) {
+                            $tmpimg = imagerotate($tmpimg, $deg, 0);
+                        }
+                    }
+                }
+            }
+        }
+
+        // Save thumbnail into a file.
+        imagejpeg($tmpimg, $path, $quality);
+        imagedestroy($tmpimg);
+        unset($tmpimg);
+    }
+}

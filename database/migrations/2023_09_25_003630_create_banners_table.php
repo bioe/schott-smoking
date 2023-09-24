@@ -11,10 +11,12 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('annoucements', function (Blueprint $table) {
+        Schema::create('banners', function (Blueprint $table) {
             $table->id();
             $table->string('title');
-            $table->text('content');
+            $table->string('type'); //Video or Image
+            $table->string('filename');
+            $table->string('path');
             $table->integer('position')->nullable();
             $table->boolean('active')->default(false);
             $table->unsignedBigInteger('station_id')->nullable();
@@ -28,6 +30,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('annoucements');
+        Schema::dropIfExists('banners');
     }
 };

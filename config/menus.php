@@ -28,6 +28,10 @@ return [
                     'title' => 'Annoucements',
                     'route' => 'annoucements.index'
                 ],
+                [
+                    'title' => 'Banners',
+                    'route' => 'banners.index'
+                ],
             ]
         ],
         [
