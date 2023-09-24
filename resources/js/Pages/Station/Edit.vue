@@ -26,6 +26,9 @@ const form = useForm({
     warning_below_seconds: props.data.warning_below_seconds ?? 0,
     disable_next_entry_seconds: props.data.disable_next_entry_seconds ?? 0,
     door_open_seconds: props.data.door_open_seconds ?? 10,
+    annoucement_interval: props.data.annoucement_interval ?? 5,
+    banner_interval: props.data.banner_interval ?? 5,
+    ip: props.data.ip ?? '',
     active: props.data.active,
 });
 
@@ -66,17 +69,23 @@ const form = useForm({
                                         Active
                                     </Checkbox>
                                 </div>
-                                <div class="col-md-6">
+                                <div class="col-md-4">
                                     <InputLabel for="code" value="Code" />
                                     <TextInput id="code" type="text" v-model="form.code" :invalid="form.errors.code"
                                         :disabled="data.id != null" required />
                                     <InputError :message="form.errors.code" />
                                 </div>
-                                <div class="col-md-6">
+                                <div class="col-md-4">
                                     <InputLabel for="name" value="Name" />
                                     <TextInput id="name" type="text" v-model="form.name" :invalid="form.errors.name"
                                         required />
                                     <InputError :message="form.errors.name" />
+                                </div>
+                                <div class="col-md-4">
+                                    <InputLabel for="ip" value="Station IP" />
+                                    <TextInput id="ip" type="text" v-model="form.ip" :invalid="form.errors.ip"
+                                        placeholder="http://192.168.1.10:80" />
+                                    <InputError :message="form.errors.ip" />
                                 </div>
 
                                 <div class="col-md-3">
@@ -126,9 +135,25 @@ const form = useForm({
                                         <InputError :message="form.errors.door_open_seconds" />
                                     </div>
                                 </div>
-
-
-
+                                <div class="col-md-3">
+                                    <InputLabel for="annoucement-interval" value="Annoucement Interval" />
+                                    <div class="input-group">
+                                        <TextInput id="annoucement-interval" type="number"
+                                            v-model="form.annoucement_interval" :invalid="form.errors.annoucement_interval"
+                                            required aria-describedby="addon5" />
+                                        <span class="input-group-text" id="addon5">seconds</span>
+                                        <InputError :message="form.errors.annoucement_interval" />
+                                    </div>
+                                </div>
+                                <div class="col-md-3">
+                                    <InputLabel for="banner-interval" value="Banner Interval" />
+                                    <div class="input-group">
+                                        <TextInput id="door-open" type="number" v-model="form.banner_interval"
+                                            :invalid="form.errors.banner_interval" required aria-describedby="addon6" />
+                                        <span class="input-group-text" id="addon6">seconds</span>
+                                        <InputError :message="form.errors.banner_interval" />
+                                    </div>
+                                </div>
                             </div>
                         </div>
                         <!-- <div v-if="data.id" class="tab-pane fade pt-10" id="tab_2" role="tabpanel" aria-labelledby="tab_2">

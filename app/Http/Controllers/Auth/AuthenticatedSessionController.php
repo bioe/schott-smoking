@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Auth\LoginRequest;
+use App\Models\Station;
 use App\Providers\RouteServiceProvider;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -19,10 +20,14 @@ class AuthenticatedSessionController extends Controller
      */
     public function create(): Response
     {
+        //Quick link for avaiable station
+        $station_list = Station::where('active', true)->get();
+
         return Inertia::render('Auth/Login', [
             'canResetPassword' => Route::has('password.request'),
             'status' => session('status'),
-            'useUsername' => env(LOGIN_USERNAME, false)
+            'useUsername' => env(LOGIN_USERNAME, false),
+            'station_list' => $station_list
         ]);
     }
 

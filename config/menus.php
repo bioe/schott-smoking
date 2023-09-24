@@ -24,6 +24,10 @@ return [
                     'title' => 'Stations',
                     'route' => 'stations.index'
                 ],
+                [
+                    'title' => 'Annoucements',
+                    'route' => 'annoucements.index'
+                ],
             ]
         ],
         [

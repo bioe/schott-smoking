@@ -20,7 +20,7 @@ class EntryLogController extends Controller
         //Build Filter
         $filters = $this->filterSessions($request, 'entrylog', [
             'keyword' => null,
-            'start' => null,
+            'start' => date("Y-m-d"),
             'end' => null,
             'station_id' => null,
             'overstay' => false
@@ -39,7 +39,6 @@ class EntryLogController extends Controller
             })->when(!empty($filters['end']), function ($q)  use ($filters) {
                 $q->endOfDay('exit_time', $filters['end']);
             })->byCostCenter(Auth::user())->filterSort($filters)->orderBy('created_at', 'desc')->paginate(config('forms.paginate'));
-
 
         $station_list = Station::all();
 

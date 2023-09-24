@@ -15,6 +15,9 @@ defineProps({
     },
     useUsername: {
         type: Boolean,
+    },
+    station_list: {
+        type: Object,
     }
 });
 
@@ -38,6 +41,7 @@ const submit = () => {
         <Head title="Log in" />
         <h1 class="h3 mb-3 fw-normal">Please sign in</h1>
         <Alert :message="status" :status="'success'" />
+
 
         <form @submit.prevent="submit">
             <template v-if="useUsername">
@@ -73,9 +77,16 @@ const submit = () => {
                 Log in
             </GuestPrimaryButton>
 
-            <div class="mt-4">
+            <div class="my-4">
                 <Link v-if="canResetPassword" :href="route('password.request')"> Forgot your password?
                 </Link>
+            </div>
+
+            <h5>Station Link</h5>
+            <div class="list-group">
+                <a v-for="station in station_list" :href="station.url" class="list-group-item list-group-item-action">
+                    {{ station.name }}
+                </a>
             </div>
         </form>
     </GuestLayout>

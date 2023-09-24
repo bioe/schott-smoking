@@ -11,14 +11,14 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('annoucements', function (Blueprint $table) {
+        Schema::create('sensors', function (Blueprint $table) {
             $table->id();
-            $table->string('title');
-            $table->text('content');
-            $table->boolean('active')->default(false);
-            $table->unsignedBigInteger('station_id')->nullable();
+            $table->unsignedBigInteger('station_id');
+            $table->string('type');
+            $table->double('value', null, 2);
             $table->timestamps();
-            $table->softDeletes();
+
+            $table->index(['station_id', 'type'], 'station_id_type');
         });
     }
 
@@ -27,6 +27,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('annoucements');
+        Schema::dropIfExists('sensors');
     }
 };

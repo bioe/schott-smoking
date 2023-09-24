@@ -18,7 +18,8 @@ return new class extends Migration
             $table->string('card_id')->nullable();
             $table->timestamp('enter_time')->nullable();
             $table->timestamp('exit_time')->nullable();
-            $table->integer('stay_duration_seconds')->nullable(); //How long is the stay enter + exit time
+            $table->integer('stay_duration_seconds')->nullable(); //From station setting
+            $table->integer('actual_stay_duration_seconds')->nullable(); //How long is the stay enter + exit time
             $table->integer('disable_next_entry_seconds')->nullable();
             $table->integer('overstay_seconds')->nullable();
             $table->boolean('maintenance')->default(false);
@@ -35,7 +36,8 @@ return new class extends Migration
             $table->string('card_id')->nullable();
             $table->timestamp('enter_time')->nullable();
             $table->timestamp('exit_time')->nullable();
-            $table->integer('stay_duration_seconds')->nullable(); //How long is the stay enter + exit time
+            $table->integer('stay_duration_seconds')->nullable(); //From station setting
+            $table->integer('actual_stay_duration_seconds')->nullable(); //How long is the stay enter + exit time
             $table->integer('disable_next_entry_seconds')->nullable();
             $table->integer('overstay_seconds')->nullable();
             $table->boolean('maintenance')->default(false);

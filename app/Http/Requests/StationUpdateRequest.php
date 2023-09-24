@@ -25,6 +25,9 @@ class StationUpdateRequest extends FormRequest
             'warning_below_seconds' => ['integer'],
             'disable_next_entry_seconds' => ['integer'],
             'door_open_seconds' => ['integer'],
+            'annoucement_interval' => ['integer'],
+            'banner_interval' => ['integer'],
+            'ip' => ['nullable', 'string'],
             'active' => ['boolean'],
         ]);
     }

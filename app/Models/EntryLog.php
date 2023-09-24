@@ -2,7 +2,10 @@
 
 namespace App\Models;
 
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Database\Eloquent\Casts\Attribute;
+
 
 class EntryLog extends BaseModel
 {
@@ -19,7 +22,8 @@ class EntryLog extends BaseModel
         'card_id',
         'enter_time',
         'exit_time',
-        'stay_duration_seconds',
+        'stay_duration_seconds', //From station setting
+        'actual_stay_duration_seconds', //How long is the stay enter + exit time
         'disable_next_entry_seconds',
         'overstay_seconds',
         'maintenance'
@@ -38,6 +42,17 @@ class EntryLog extends BaseModel
 
     //Default attributes
     protected $attributes = [];
+
+    protected $appends = [
+        'finished_at'
+    ];
+
+    public function finishedAt(): Attribute
+    {
+        return Attribute::make(
+            get: fn (mixed $value, array $attributes) => Carbon::createFromFormat(date_extract_format($attributes['enter_time']), $attributes['enter_time'])->addSeconds($attributes['stay_duration_seconds'])
+        );
+    }
 
     public function employee()
     {
@@ -82,7 +97,7 @@ class EntryLog extends BaseModel
             ['field' => 'station.name', 'title' => 'Station', 'sortable' => true],
             ['field' => 'enter_time', 'title' => 'Entry', 'sortable' => true],
             ['field' => 'exit_time', 'title' => 'Exit', 'sortable' => true],
-            ['field' => 'stay_duration_seconds', 'title' => 'Duration', 'sortable' => true],
+            ['field' => 'actual_stay_duration_seconds', 'title' => 'Duration', 'sortable' => true],
         ]);
     }
 }

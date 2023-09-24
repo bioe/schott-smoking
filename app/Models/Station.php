@@ -17,11 +17,14 @@ class Station extends BaseModel
     protected $fillable = [
         'code',
         'name',
-        'max_pax',
-        'stay_duration_seconds',
-        'warning_below_seconds',
-        'disable_next_entry_seconds',
-        'door_open_seconds',
+        'max_pax', //How many person allow to enter
+        'stay_duration_seconds', //How long they allow to smoke
+        'warning_below_seconds', //Warning when the time reach below
+        'disable_next_entry_seconds', //Prevent re-entry
+        'door_open_seconds', //IO to turn off the door again
+        'annoucement_interval', //Annoucement slider
+        'banner_interval', //Banner slider
+        'ip',
         'active'
     ];
 
@@ -40,10 +43,28 @@ class Station extends BaseModel
         'active' => true,
     ];
 
+    protected $appends = [
+        'url'
+    ];
+
     public function active(): Attribute
     {
         return Attribute::make(
             get: fn (string $value) => $value ? true : false
+        );
+    }
+
+    public function code(): Attribute
+    {
+        return Attribute::make(
+            set: fn (string $value) => strtoupper($value)
+        );
+    }
+
+    public function url(): Attribute
+    {
+        return Attribute::make(
+            get: fn (mixed $value, array $attributes) => route('area', $attributes['code'])
         );
     }
 
