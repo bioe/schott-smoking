@@ -131,6 +131,10 @@ onMounted(
                             <SplideSlide>
                                 <img src="storage/image3.jpg" class="p-2">
                             </SplideSlide>
+                            <SplideSlide>
+                                <video v-if="slide.type === 'video'" :src="slide.video.src" :type="slide.video.type"
+                                    controls></video>
+                            </SplideSlide>
                         </Splide>
                     </div>
 

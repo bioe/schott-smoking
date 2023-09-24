@@ -3,6 +3,8 @@ import { Head } from '@inertiajs/vue3';
 import HeadRow from '@/Components/Table/HeadRow.vue';
 import { Splide, SplideSlide } from '@splidejs/vue-splide';
 import '@splidejs/vue-splide/css';
+import { Video } from '@splidejs/splide-extension-video';
+import '@splidejs/splide-extension-video/dist/css/splide-extension-video.min.css';
 import { useTimer } from 'vue-timer-hook';
 import { onMounted, ref, computed } from 'vue'
 import axios from 'axios';
@@ -15,23 +17,58 @@ const props = defineProps({
     annoucement_interval: {
         type: Number
     },
+    annoucement_list: {
+        type: Object
+    },
+    annoucement_last_update: { type: String },
     banner_interval: {
         type: Number
-    }
+    },
 });
 
 const list = ref([]);
-const annoucement_list = ref([]);
 const air = ref(0);
 const temperature = ref(0);
 const currentDate = ref(new Date());
+const splide_annoucement = ref();
+const splide_banner = ref();
+const extensions = { Video }
+
+//Banner
+const options = {
+    type: "loop",
+    video: {
+        loop: false,
+        mute: true,
+        autoplay: true,
+    },
+    heightRatio: 0.65,
+};
 
 onMounted(
     () => {
+        //Mix of Image and Video, have to manually control the slider
+        if (splide_banner.value) {
+            splide_banner.value.splide.on('video:ended', (rate) => {
+                splide_banner.value.splide.go('>');
+            });
+
+            splide_banner.value.splide.on('moved', (index) => {
+                //Not video then wait for banner_interval
+                let data = splide_banner.value.splide.Components.Elements.slides[index].getAttribute('data-isvideo');
+                if (data == "false") {
+                    setTimeout(() => {
+                        splide_banner.value.splide.go('>');
+                    }, props.banner_interval);
+                }
+            });
+        }
+
         //Initialize
         refresh();
         setInterval(updateDateTime, 900);
         setInterval(refresh, 5000);
+
     }
 )
 
@@ -48,6 +85,12 @@ function refresh() {
             return;
         }
 
+        if (props.annoucement_last_update != response.data.annoucement_last_update) {
+            //New Annoucement
+            reloadPage();
+            return;
+        }
+
         for (var entry of response.data.list) {
             entry.timer = useTimer(new Date(entry.finished_at));
 
@@ -56,11 +99,8 @@ function refresh() {
             entry.warning_date = new Date(wa.getTime() - props.warning_below_seconds * 1000);
         }
         list.value = response.data.list;
-        annoucement_list.value = response.data.annoucement_list;
         air.value = response.data.air ?? 0;
         temperature.value = response.data.temperature ?? 0;
-
-
     });
 }
 
@@ -125,10 +165,11 @@ const air_quality_bg = computed(() => {
         <div class="row mb-3">
             <div class="col-lg-12">
                 <div class="h-100 p-3 box-bg border rounded-3">
-                    <Splide
+                    <Splide ref="splide_annoucement"
                         :options="{ rewind: true, autoWidth: true, autoplay: true, interval: annoucement_interval, arrows: false }"
                         aria-label="Annoucements" style="height:100%">
-                        <SplideSlide v-for="annoucement in annoucement_list" class="fs-4 text-light" style="width:100%">
+                        <SplideSlide v-for="annoucement in props.annoucement_list" class="fs-4 text-light"
+                            style="width:100%">
                             <span v-html="annoucement.html_content"></span>
                         </SplideSlide>
                     </Splide>
@@ -157,14 +198,22 @@ const air_quality_bg = computed(() => {
                                         item.timer?.seconds.toLocaleString(undefined, {
                                             minimumIntegerDigits: 2
                                         }) }} </td>
-
                             </tr>
-
                         </tbody>
                     </table>
                 </div>
             </div>
             <div class="col-lg-6">
+                <Splide ref="splide_banner" aria-labelledby="video-example-heading" :options="options"
+                    :extensions="extensions">
+                    <SplideSlide v-for="( id, index ) in videos" :key="id"
+                        :data-splide-html-video="'http://localhost:8000/storage/schott.mp4'" data-isvideo="true">
+                        <img :src="`https://i3.ytimg.com/vi/${id}/maxresdefault.jpg`" :alt="`YouTube Sample ${index + 1}`">
+                    </SplideSlide>
+                    <SplideSlide data-isvideo="false">
+                        <img src="/storage/image3.jpg">
+                    </SplideSlide>
+                </Splide>
             </div>
         </div>
     </div>
