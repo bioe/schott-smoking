@@ -59,7 +59,6 @@ onMounted(
             });
 
             splide_banner.value.splide.on('moved', (index) => {
-                console.log("moved");
                 bannerNextSlide(index);
             });
 

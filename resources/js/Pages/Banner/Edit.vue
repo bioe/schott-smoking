@@ -27,6 +27,7 @@ const form = useForm({
 
 if (props.data.id != null) {
     form._method = 'put';
+    console.log(form);
 }
 
 // const submit = () => {
@@ -77,8 +78,14 @@ if (props.data.id != null) {
                                 <div class="col-md-6">
                                     <InputLabel for="content" value="Image / Video" />
                                     <input type="file" @input="form.media = $event.target.files[0]" accept="image/*,video/*"
-                                        class="form-control" />
+                                        class="form-control" :class="{ 'is-invalid': form.errors.media }" />
                                     <InputError :message="form.errors.media" />
+
+                                    <br />
+
+                                    <template v-if="data.full_path">Link: <a :href="data.full_path" target="_blank">{{
+                                        data.filename
+                                    }}</a></template>
                                 </div>
                             </div>
                         </div>

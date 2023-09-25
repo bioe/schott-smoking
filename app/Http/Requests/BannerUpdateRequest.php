@@ -14,9 +14,14 @@ class BannerUpdateRequest extends FormRequest
     public function rules(): array
     {
         $rules = [];
+        $requiredOrNull = "required";
+        if ($this->banner) {
+            $requiredOrNull = "nullable";
+        }
         return  array_merge($rules, [
             'title' => ['string', 'max:255'],
-            'media' => ['file']
+            'media' => [$requiredOrNull, 'file'],
+            'active' => ['boolean']
         ]);
     }
 }

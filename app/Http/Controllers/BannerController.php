@@ -77,24 +77,23 @@ class BannerController extends Controller
     {
         $data = $request->validated();
 
-        $media = $request->file('media');
+        if ($request->hasFile('media')) {
+            $media = $request->file('media');
+            $file_data = $this->saveFile($media, 'banners/');
 
-        $file_data = $this->saveFile($media, 'banners/');
-
-        if (!empty($file_data['path'])) {
-            $data['type'] = $file_data['type'];
-            $data['filename'] = $file_data['name'];
-            $data['path'] = $file_data['path'];
-
-            if (null == $id) {
-                $data = Banner::create($data);
-                return Redirect::route('banners.edit', $data->id)->with('message', 'Banner created successfully');
-            } else {
-                Banner::find($id)->update($data);
-                return Redirect::route('banners.edit', $id)->with('message', 'Banner updated successfully');
+            if (!empty($file_data['path'])) {
+                $data['type'] = $file_data['type'];
+                $data['filename'] = $file_data['name'];
+                $data['path'] = $file_data['path'];
             }
+        }
+
+        if (null == $id) {
+            $data = Banner::create($data);
+            return Redirect::route('banners.edit', $data->id)->with('message', 'Banner created successfully');
         } else {
-            return Redirect::route('banners.create')->with('message', 'Fail to upload.');
+            Banner::find($id)->update($data);
+            return Redirect::route('banners.edit', $id)->with('message', 'Banner updated successfully');
         }
     }
 
