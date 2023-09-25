@@ -90,6 +90,11 @@ class User extends Authenticatable //implements MustVerifyEmail
         );
     }
 
+    public function cost_centers()
+    {
+        return $this->belongsToMany(CostCenter::class);
+    }
+
     //Static Functions Below Here
 
     /*

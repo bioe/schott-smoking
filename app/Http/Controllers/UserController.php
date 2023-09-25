@@ -64,10 +64,15 @@ class UserController extends Controller
         if (null == $id) {
             $data = new User;
         } else {
-            $data = User::find($id);
+            $data = User::with('cost_centers')->find($id);
+            $data->cost_center_ids = $data->cost_centers->pluck('id');
         }
         $menu_list = config('menus.items');
-        $cost_center_list = CostCenter::all();
+        $costcenters = CostCenter::all();
+        $cost_center_list = [];
+        foreach ($costcenters as $cc) {
+            $cost_center_list[] = ['value' => $cc->id, 'label' => $cc->code];
+        }
 
         return Inertia::render('User/Edit', [
             'data' => $data,
@@ -117,5 +122,21 @@ class UserController extends Controller
         $data->menu_permission = $request->menus;
         $data->save();
         return Redirect::route('users.edit', $data->id)->with('message', 'Menu Permission Updated');
+    }
+
+    /**
+     * Save Cost Center
+     */
+
+    public function patchCostCenter(Request $request, $id)
+    {
+        $data = User::find($id);
+        $data->cost_centers()->detach();
+        if ($request->has('cost_center_ids')) {
+            foreach ($request->cost_center_ids as $id) {
+                $data->cost_centers()->attach($id);
+            }
+        }
+        return Redirect::route('users.edit', $data->id)->with('message', 'Cost Center Updated');
     }
 }

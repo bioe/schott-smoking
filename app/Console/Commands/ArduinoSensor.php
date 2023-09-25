@@ -41,19 +41,19 @@ class ArduinoSensor extends Command
                 $response = $call->getSensors();
                 if ($response != null) {
                     //Save Value
-                    if (!empty($response['air'])) {
+                    if (!empty($response['iaq'])) {
                         Sensor::create([
                             'station_id' => $station->id,
                             'type' => SENSOR_AIR,
-                            'value' => number_format($response['air'], 2)
+                            'value' => number_format($response['iaq'], 2)
                         ]);
                     }
 
-                    if (!empty($response['temperature'])) {
+                    if (!empty($response['raw_temperature'])) {
                         Sensor::create([
                             'station_id' => $station->id,
                             'type' => SENSOR_TEMP,
-                            'value' =>  number_format($response['temperature'], 2)
+                            'value' =>  number_format($response['raw_temperature'], 2)
                         ]);
                     }
                 }

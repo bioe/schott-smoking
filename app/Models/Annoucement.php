@@ -43,7 +43,7 @@ class Annoucement extends BaseModel
     public function htmlContent(): Attribute
     {
         return Attribute::make(
-            get: fn (mixed $value, array $attributes) => nl2br($attributes['content'])
+            get: fn (mixed $value, array $attributes) => nl2br($attributes['content'] ?? '')
         );
     }
 

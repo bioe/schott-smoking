@@ -67,15 +67,6 @@ const form = useForm({
                 <InputError :message="form.errors.name" />
             </div>
 
-            <div class="col-md-6">
-                <InputLabel for="cost_center_id" value="Cost Center" />
-                <select class="form-select" name="cost_center_id" v-model="form.cost_center_id">
-                    <option :value=null>None</option>
-                    <option v-for=" cc in cost_center_list " :value="cc.id">{{ cc.code }}</option>
-                </select>
-                <InputError :message="form.errors.cost_center_id" />
-            </div>
-
             <div class="col-12">
                 <PrimaryButton type="submit" v-html="data.id == null ? 'Create' : 'Save'" :disabled="form.processing">
                 </PrimaryButton>

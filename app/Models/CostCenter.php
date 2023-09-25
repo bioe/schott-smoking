@@ -15,6 +15,10 @@ class CostCenter extends BaseModel
         'name',
     ];
 
+    public function users()
+    {
+        return $this->belongsToMany(User::class);
+    }
     //Static Functions Below Here
 
     /*
@@ -32,8 +36,8 @@ class CostCenter extends BaseModel
     //View related Cost Center Employee Only
     public function scopeByCostCenter($query, User $user)
     {
-        return $query->when($user != null && $user->cost_center_id != null, function ($q) use ($user) {
-            $q->where('id', $user->cost_center_id);
+        return $query->when($user != null && $user->cost_centers->count() > 0, function ($q) use ($user) {
+            $q->whereIn('id', $user->cost_centers->pluck('id'));
         });
     }
 }

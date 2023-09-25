@@ -42,12 +42,14 @@ const extensions = { Video }
 const options = {
     type: "loop",
     focus: 'center',
+    arrows: false,
+    pagination: false,
     video: {
         loop: false,
         mute: true,
         autoplay: true,
     },
-    heightRatio: 0.65,
+    heightRatio: 0.79, //Chrome full screen in TV
 };
 
 onMounted(
@@ -152,12 +154,17 @@ const air_quality_bg = computed(() => {
     <div class="container-fluid p-3 full-height">
         <div class="row mb-3">
             <div class="col-lg-3 text-light">
-                <div class="sensor-column schott-colour text-center rounded-3" style="font-size: 2rem !important;">
-                    {{ currentDate.toLocaleDateString(undefined, { weekday: 'long' }) }} <br />
+                <div class="sensor-column schott-colour text-center rounded-3"
+                    style="min-height: 142.4px; max-height: 142.4px;">
+                    <img src="/assets/schott-logo.png" style="height: 80px; margin-top: 2rem; margin-bottom: 2rem;"
+                        alt="logo" />
+
+                    <!-- <object type="image/svg+xml" data="/assets/schott-logo.svg" height="121px"></object> -->
+                    <!-- {{ currentDate.toLocaleDateString(undefined, { weekday: 'long' }) }} <br />
                     {{ currentDate.toLocaleDateString(undefined, { day: '2-digit' }) }} {{
                         currentDate.toLocaleDateString(undefined, { month: 'short' }) }} <br />
                     {{ currentDate.toLocaleTimeString(undefined, { hour: '2-digit', minute: '2-digit', second: '2-digit' })
-                    }}
+                    }} -->
                 </div>
             </div>
             <div class="col-lg-3 text-light">
@@ -184,7 +191,7 @@ const air_quality_bg = computed(() => {
             <div class="col-lg-12">
                 <div class="h-100 p-3 box-bg border rounded-3">
                     <Splide ref="splide_annoucement"
-                        :options="{ rewind: true, autoWidth: true, autoplay: true, interval: annoucement_interval, arrows: false }"
+                        :options="{ rewind: true, autoWidth: true, autoplay: true, interval: annoucement_interval, arrows: false, pagination: false }"
                         aria-label="Annoucements" style="height:100%">
                         <SplideSlide v-for="annoucement in props.annoucement_list" class="fs-4 text-light"
                             style="width:100%">
@@ -243,4 +250,14 @@ const air_quality_bg = computed(() => {
             </div>
         </div>
     </div>
+    <footer class="d-flex flex-wrap justify-content-between align-items-center py-3 my-4 border-top">
+        <div class="col-md-4 d-flex align-items-center ms-2">
+            <img src="/assets/bio-blue.png" style="width:15%" />
+            <span class="mb-3 mb-md-0 text-body-secondary">© 2023 Bionergy Project</span>
+        </div>
+
+        <div class="nav col-md-4 justify-content-end list-unstyled d-flex me-2">
+            Smoking Monitoring System
+        </div>
+    </footer>
 </template>

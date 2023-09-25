@@ -54,8 +54,8 @@ class Employee extends BaseModel
     //View related Cost Center Employee Only
     public function scopeByCostCenter($query, User $user)
     {
-        return $query->when($user != null && $user->cost_center_id != null, function ($q) use ($user) {
-            $q->where('cost_center_id', $user->cost_center_id);
+        return $query->when($user != null && $user->cost_centers->count() > 0, function ($q) use ($user) {
+            $q->whereIn('cost_center_id', $user->cost_centers->pluck('id'));
         });
     }
 

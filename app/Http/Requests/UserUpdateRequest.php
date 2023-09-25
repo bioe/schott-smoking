@@ -21,12 +21,16 @@ class UserUpdateRequest extends FormRequest
         if (env(LOGIN_USERNAME, false)) {
             $rules['username'] = ['alpha_dash', 'max:255', Rule::unique(User::class)->ignore($this->user)];
         }
+        if ($this->user) {
+            $rules['password'] = ['nullable', Password::defaults()];
+        } else {
+            $rules['password'] = ['required', Password::defaults()];
+        }
+
         return  array_merge($rules, [
             'name' => ['string', 'max:255'],
             'email' => ['email', 'max:255', Rule::unique(User::class)->ignore($this->user)],
-            'password' => ['nullable', Password::defaults()],
-            'active' => ['boolean'],
-            'cost_center_id' => ['nullable'],
+            'active' => ['boolean']
         ]);
     }
 }

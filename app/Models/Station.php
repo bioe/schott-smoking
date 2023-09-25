@@ -64,7 +64,7 @@ class Station extends BaseModel
     public function url(): Attribute
     {
         return Attribute::make(
-            get: fn (mixed $value, array $attributes) => route('area', $attributes['code'])
+            get: fn (mixed $value, array $attributes) => !empty($attributes['code']) ? route('area', $attributes['code']) : null
         );
     }
 

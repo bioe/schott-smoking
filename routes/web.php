@@ -50,6 +50,7 @@ Route::middleware('auth', 'admin')->group(function () {
     Route::prefix('users')->name('users.')->group(function () {
         //Do Something later
         Route::patch('menu/{id}', [UserController::class, 'patchMenu'])->name('menu.update');
+        Route::patch('costcenter/{id}', [UserController::class, 'patchCostcenter'])->name('costcenter.update');
     });
     Route::resource('users', UserController::class);
     Route::resource('stations', StationController::class);

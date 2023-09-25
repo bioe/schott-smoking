@@ -94,12 +94,12 @@ const submit = () => {
                 </div>
             </form>
 
-            <div class="d-grid gap-2 d-md-flex justify-content-md-end mb-3">
+            <!-- <div class="d-grid gap-2 d-md-flex justify-content-md-end mb-3">
                 <Link class="btn btn-outline-primary btn-sm" :href="route(routeGroupName + '.create')">
                 <i class="bi bi-plus"></i>
                 Create
                 </Link>
-            </div>
+            </div> -->
 
             <table class="table table-bordered table-striped table-hover">
                 <thead>
