@@ -121,7 +121,7 @@ const submit = () => {
                         <td>{{ item.station?.name }}</td>
                         <td>{{ formatDate(item.enter_time) }}</td>
                         <td>{{ formatDate(item.exit_time) }}</td>
-                        <td :class="item.overstay_seconds > 0 ? 'text-danger' : ''">{{ item.actual_stay_duration_seconds }}
+                        <td :class="item.overstay_seconds > 0 ? 'text-danger' : ''">{{ item.stay_label }}
                         </td>
                     </tr>
                 </tbody>

@@ -45,13 +45,20 @@ class EntryLog extends BaseModel
     protected $attributes = [];
 
     protected $appends = [
-        'finished_at'
+        'finished_at', 'stay_label'
     ];
 
     public function finishedAt(): Attribute
     {
         return Attribute::make(
             get: fn (mixed $value, array $attributes) => Carbon::createFromFormat(date_extract_format($attributes['enter_time']), $attributes['enter_time'])->addSeconds($attributes['stay_duration_seconds'])
+        );
+    }
+
+    public function stayLabel(): Attribute
+    {
+        return Attribute::make(
+            get: fn (mixed $value, array $attributes) => $attributes['actual_stay_duration_seconds'] != null ? getHoursMinutes($attributes['actual_stay_duration_seconds']) : ''
         );
     }
 

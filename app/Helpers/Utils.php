@@ -115,6 +115,31 @@ if (!function_exists('imgSanitize')) {
     }
 }
 
+if (!function_exists('getHoursMinutes')) {
+    function getHoursMinutes($seconds, $short = true)
+    {
+        $hours = floor($seconds / 3600);
+        $minutes = floor(($seconds / 60) % 60);
+        $seconds = $seconds % 60;
+
+        $result = '';
+        if ($hours > 0) {
+            $result .= $hours . ' hours ';
+            if ($short) return $result;
+        }
+        if ($minutes > 0) {
+            $result .= $minutes . ' minutes ';
+            if ($short) return $result;
+        }
+        if ($seconds > 0) {
+            $result .= $seconds . ' seconds';
+            if ($short) return $result;
+        }
+
+        return $result;
+    }
+}
+
 if (!function_exists('hexToNumber')) {
     function hexToNumber($hex)
     {
