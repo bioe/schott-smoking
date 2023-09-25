@@ -114,3 +114,10 @@ if (!function_exists('imgSanitize')) {
         unset($tmpimg);
     }
 }
+
+if (!function_exists('hexToNumber')) {
+    function hexToNumber($hex)
+    {
+        return $hex;
+    }
+}

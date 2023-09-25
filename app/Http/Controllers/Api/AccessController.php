@@ -12,19 +12,24 @@ use Illuminate\Http\Request;
 
 class AccessController extends Controller
 {
+    /* Payload
+    * {station_code:String, card_hex:String}
+    */
     public function enter_door(Request $request)
     {
         $station = Station::where('code', $request->station_code)->first();
         if ($station == null) return $this->logNRespone('Station not found');
 
-        $employee = Employee::where('card_id', $request->card_id)->first();
-        if ($employee == null) return $this->logNRespone('Employee ' . $request->card_id . ' not found');
+        $card_id = hexToNumber($request->card_hex);
+        $employee = Employee::where('card_id', $card_id)->first();
+        if ($employee == null) return $this->logNRespone('Employee ' . $card_id . ' not found');
 
         //For record purpose only
         RawEntryLog::create([
             'employee_id' => $employee->id,
             'station_id' => $station->id,
-            'card_id' =>  $request->card_id,
+            'card_hex' =>  $request->card_hex,
+            'card_id' =>  $card_id,
             'enter_time' => Carbon::now(),
             'stay_duration_seconds' => $station->stay_duration_seconds,
             'disable_next_entry_seconds' => $station->disable_next_entry_seconds,
@@ -65,7 +70,8 @@ class AccessController extends Controller
             EntryLog::create([
                 'employee_id' => $employee->id,
                 'station_id' => $station->id,
-                'card_id' =>  $request->card_id,
+                'card_hex' =>  $request->card_hex,
+                'card_id' =>  $card_id,
                 'enter_time' => Carbon::now(),
                 'stay_duration_seconds' => $station->stay_duration_seconds,
                 'disable_next_entry_seconds' => $station->disable_next_entry_seconds,
@@ -76,19 +82,24 @@ class AccessController extends Controller
         return response()->json(['door_open_seconds' => $station->door_open_seconds]);
     }
 
+    /* Payload
+    * {station_code:String, card_hex:String}
+    */
     public function exit_door(Request $request)
     {
         $station = Station::where('code', $request->station_code)->first();
         if ($station == null) return $this->logNRespone('Station not found');
 
-        $employee = Employee::where('card_id', $request->card_id)->first();
-        if ($employee == null) return $this->logNRespone('Employee ' . $request->card_id . ' not found');
+        $card_id = hexToNumber($request->card_hex);
+        $employee = Employee::where('card_id',  $card_id)->first();
+        if ($employee == null) return $this->logNRespone('Employee ' .  $card_id . ' not found');
 
         //For record purpose only
         RawEntryLog::create([
             'employee_id' => $employee->id,
             'station_id' => $station->id,
-            'card_id' =>  $request->card_id,
+            'card_hex' =>  $request->card_hex,
+            'card_id' =>   $card_id,
             'exit_time' => Carbon::now(),
             'stay_duration_seconds' => $station->stay_duration_seconds,
             'disable_next_entry_seconds' => $station->disable_next_entry_seconds,

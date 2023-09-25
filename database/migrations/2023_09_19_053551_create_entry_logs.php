@@ -15,6 +15,7 @@ return new class extends Migration
             $table->id();
             $table->unsignedBigInteger('employee_id')->nullable();
             $table->unsignedBigInteger('station_id');
+            $table->string('card_hex')->nullable();
             $table->string('card_id')->nullable();
             $table->timestamp('enter_time')->nullable();
             $table->timestamp('exit_time')->nullable();
@@ -33,6 +34,7 @@ return new class extends Migration
             $table->id();
             $table->unsignedBigInteger('employee_id')->nullable();
             $table->unsignedBigInteger('station_id');
+            $table->string('card_hex')->nullable();
             $table->string('card_id')->nullable();
             $table->timestamp('enter_time')->nullable();
             $table->timestamp('exit_time')->nullable();

@@ -16,6 +16,7 @@ class RawEntryLog extends BaseModel
     protected $fillable = [
         'employee_id',
         'station_id',
+        'card_hex',
         'card_id',
         'enter_time',
         'exit_time',
