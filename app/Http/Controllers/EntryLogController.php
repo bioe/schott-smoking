@@ -23,7 +23,7 @@ class EntryLogController extends Controller
             'start' => date("Y-m-d"),
             'end' => null,
             'station_id' => null,
-            'overstay' => false
+            'overstay' => null
         ]);
 
         $list = EntryLog::with(['employee', 'station'])
@@ -38,6 +38,10 @@ class EntryLogController extends Controller
                 $q->startOfDay('enter_time', $filters['start']);
             })->when(!empty($filters['end']), function ($q)  use ($filters) {
                 $q->endOfDay('exit_time', $filters['end']);
+            })->when(!empty($filters['overstay'] != null && $filters['overstay'] == 'yes'), function ($q) {
+                $q->where('overstay_seconds', '>', 0);
+            })->when(!empty($filters['overstay'] != null && $filters['overstay'] == 'no'), function ($q) {
+                $q->where('overstay_seconds', 0);
             })->byCostCenter(Auth::user())->filterSort($filters)->orderBy('created_at', 'desc')->paginate(config('forms.paginate'));
 
         $station_list = Station::all();

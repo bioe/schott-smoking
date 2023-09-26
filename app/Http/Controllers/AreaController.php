@@ -36,6 +36,7 @@ class AreaController extends Controller
             'annoucement_last_update' => $annoucement_list->count() > 0 ? $annoucement_list[0]->updated_at : null,
             'banner_list' => $banner_list,
             'banner_last_update' =>  $banner_list->count() > 0 ? $banner_list[0]->updated_at : null,
+            'polling_interval' => config('area.polling_interval')
         ]);
     }
 

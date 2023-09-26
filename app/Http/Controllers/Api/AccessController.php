@@ -20,7 +20,11 @@ class AccessController extends Controller
         $station = Station::where('code', $request->station_code)->first();
         if ($station == null) return $this->logNRespone('Station ' . $request->station_code . ' not found');
 
-        $card_id = hexToNumber($request->card_hex);
+        if ($request->has('card_id')) {
+            $card_id = $request->card_id;
+        } else {
+            $card_id = hexToNumber($request->card_hex);
+        }
         $employee = Employee::where('card_id', $card_id)->first();
         if ($employee == null) return $this->logNRespone('Employee ' . $request->card_hex . "|" . $card_id . ' not found');
 
@@ -90,7 +94,11 @@ class AccessController extends Controller
         $station = Station::where('code', $request->station_code)->first();
         if ($station == null) return $this->logNRespone('Station not found');
 
-        $card_id = hexToNumber($request->card_hex);
+        if ($request->has('card_id')) {
+            $card_id = $request->card_id;
+        } else {
+            $card_id = hexToNumber($request->card_hex);
+        }
         $employee = Employee::where('card_id',  $card_id)->first();
         if ($employee == null) return $this->logNRespone('Employee ' .  $card_id . ' not found');
 
@@ -121,7 +129,9 @@ class AccessController extends Controller
             $entry->actual_stay_duration_seconds = $now->diffInSeconds($entry->enter_time);
             //Does the stay duration over the allowed stay duration from station setting
             if ($entry->actual_stay_duration_seconds > $entry->stay_duration_seconds) {
-                $entry->overstay_seconds = $entry->stay_duration_seconds - $entry->stay_duration_seconds;
+                $entry->overstay_seconds = $entry->actual_stay_duration_seconds - $entry->stay_duration_seconds;
+            } else {
+                $entry->overstay_seconds = 0;
             }
             $entry->save();
         }

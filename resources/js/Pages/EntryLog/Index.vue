@@ -85,6 +85,16 @@ const submit = () => {
                             <label for="stationInput">Station</label>
                         </div>
                     </div>
+                    <div class="col-md-3">
+                        <div class="form-floating mb-3">
+                            <select v-model="form.overstay" class="form-select">
+                                <option :value=null>All</option>
+                                <option :value="'yes'">Yes</option>
+                                <option :value="'no'">No</option>
+                            </select>
+                            <label for="stationInput">Overstay</label>
+                        </div>
+                    </div>
                     <div class="col-12">
                         <PrimaryButton type="submit" :disabled="form.processing">
                             <i class="bi bi-search"></i>

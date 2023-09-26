@@ -43,7 +43,8 @@ function openDoor(id, direction) {
                 <div v-for="station in stations" class="col-sm-6 mb-3 mb-sm-0">
                     <div class="card">
                         <div class="card-body">
-                            <h5 class="card-title">{{ station.name }}</h5>
+                            <h5 class="card-title"><a :href="route('area', station.code)" target="_blank">{{ station.name
+                            }}</a></h5>
                             <button class="btn btn-success me-3" :disabled="disable_door_btn"
                                 @click="openDoor(station.id, 'in')">Open Enter Door</button>
                             <button class="btn btn-warning" :disabled="disable_door_btn"

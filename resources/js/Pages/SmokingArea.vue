@@ -28,6 +28,7 @@ const props = defineProps({
         type: Object
     },
     banner_last_update: { type: String },
+    polling_interval: { type: Number }
 });
 
 const list = ref([]);
@@ -71,7 +72,7 @@ onMounted(
         //Initialize
         refresh();
         setInterval(updateDateTime, 900);
-        setInterval(refresh, 5000);
+        setInterval(refresh, props.polling_interval);
 
     }
 )
@@ -240,12 +241,6 @@ const air_quality_bg = computed(() => {
                             <img :src="banner.full_path">
                         </SplideSlide>
                     </template>
-                    <!-- <SplideSlide :data-splide-html-video="'http://localhost:8000/storage/schott.mp4'" data-isvideo="true">
-                        <img :src="`/assets/play-icon.png`" />
-                    </SplideSlide>
-                    <SplideSlide data-isvideo="false">
-                        <img src="/storage/image3.jpg">
-                    </SplideSlide> -->
                 </Splide>
             </div>
         </div>
