@@ -143,6 +143,26 @@ if (!function_exists('getHoursMinutes')) {
 if (!function_exists('hexToNumber')) {
     function hexToNumber($hex)
     {
-        return $hex;
+        //Eg. Full Card 0009527380 145 24660
+        if (strlen($hex) != 12) {
+            //invalid card_id
+            return null;
+        }
+        //UART Protocal 
+        //always start from index 2, get 8 characters
+        $front_hex = substr($hex, 2, strlen($hex) - 4);
+        //convert from hex to decimal
+        $front_number = hexdec($front_hex); //Front number 
+        $behind_hex = dechex($front_number); //Convert to hex
+
+        $three = hexdec(substr($behind_hex, 0, 2)); //Split first 2 hex and convert to decimal
+        if (strlen($three) == 1) $three = "00" . $three; //if only 1 char add two zero
+        if (strlen($three) == 2) $three = "0" . $three; //if only 2 char add one zero
+        $four =  hexdec(substr($behind_hex, 2, 4)); //Split last 4 hex and convert to decimal
+
+        //Add 0 between the space
+        //Last 8 digit (0)145(0)24660
+        $real_card_id = "0" . $three . "0" . $four;
+        return   $real_card_id;
     }
 }

@@ -18,11 +18,11 @@ class AccessController extends Controller
     public function enter_door(Request $request)
     {
         $station = Station::where('code', $request->station_code)->first();
-        if ($station == null) return $this->logNRespone('Station not found');
+        if ($station == null) return $this->logNRespone('Station ' . $request->station_code . ' not found');
 
         $card_id = hexToNumber($request->card_hex);
         $employee = Employee::where('card_id', $card_id)->first();
-        if ($employee == null) return $this->logNRespone('Employee ' . $card_id . ' not found');
+        if ($employee == null) return $this->logNRespone('Employee ' . $request->card_hex . "|" . $card_id . ' not found');
 
         //For record purpose only
         RawEntryLog::create([
