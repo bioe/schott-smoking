@@ -48,13 +48,19 @@ Route::middleware('auth', 'admin')->group(function () {
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 
     Route::prefix('users')->name('users.')->group(function () {
-        //Do Something later
         Route::patch('menu/{id}', [UserController::class, 'patchMenu'])->name('menu.update');
         Route::patch('costcenter/{id}', [UserController::class, 'patchCostcenter'])->name('costcenter.update');
     });
     Route::resource('users', UserController::class);
-    Route::resource('stations', StationController::class);
+
+    Route::prefix('costcenters')->name('costcenters.')->group(function () {
+        Route::get('/import', [CostCenterController::class, 'getImport'])->name('import');
+        Route::post('/import', [CostCenterController::class, 'postImport'])->name('import');
+        Route::get('/template', [CostCenterController::class, 'getTemplate'])->name('template');
+    });
     Route::resource('costcenters', CostCenterController::class);
+
+    Route::resource('stations', StationController::class);
     Route::resource('employees', EmployeeController::class);
     Route::resource('entrylogs', EntryLogController::class);
     Route::resource('annoucements', AnnoucementController::class);

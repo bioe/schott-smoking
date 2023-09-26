@@ -2,7 +2,9 @@
 
 namespace App\Http\Requests;
 
+use App\Models\CostCenter;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
 
 class CostCenterUpdateRequest extends FormRequest
 {
@@ -13,10 +15,11 @@ class CostCenterUpdateRequest extends FormRequest
      */
     public function rules(): array
     {
-        //$this->employee = id //Auto from laravel
+        //$this->costcenter = id //Auto from laravel
         $rules = [];
         return  array_merge($rules, [
-            'code' => ['string', 'max:255'],
+            'code' => ['string', 'max:255', Rule::unique(CostCenter::class)->ignore($this->costcenter)],
+            'name' => ['string', 'max:255'],
         ]);
     }
 }

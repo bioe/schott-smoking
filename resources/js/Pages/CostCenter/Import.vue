@@ -16,18 +16,12 @@ const props = defineProps({
 });
 
 const routeGroupName = 'costcenters';
-const headerTitle = ref('Cost Center');
+const headerTitle = ref('Import Cost Center');
 
 const form = useForm({
-    code: props.data.code ?? '',
-    name: props.data.name
+    csv: '',
 });
 
-// const submit = () => {
-//     form.get(route('users.index'), {
-//         preserveScroll: true,
-//     });
-// };
 </script>
 
 <template>
@@ -38,13 +32,12 @@ const form = useForm({
             {{ headerTitle }}
         </template>
 
-        <form
-            @submit.prevent="data.id == null ? form.post(route(routeGroupName + '.store')) : form.patch(route(routeGroupName + '.update', data.id))">
+        <form @submit.prevent="form.post(route(routeGroupName + '.import'))">
             <div class="card">
                 <div class="card-header">
                     <ul class="nav nav-tabs card-header-tabs">
                         <li class="nav-item">
-                            <a class="nav-link active" data-bs-toggle="tab" href="#tab_1">Details</a>
+                            <a class="nav-link active" data-bs-toggle="tab" href="#tab_1">Upload</a>
                         </li>
                         <!-- <li v-if="data.id" class="nav-item">
                             <a class="nav-link" data-bs-toggle="tab" href="#tab_2">Permissions</a>
@@ -55,20 +48,15 @@ const form = useForm({
                     <div class="tab-content">
                         <div class="tab-pane fade pt-10 show active" id="tab_1" role="tabpanel" aria-labelledby="tab_1">
                             <div class="row g-3">
-                                <div class="col-md-6">
-                                    <InputLabel for="code" value="Code" />
-                                    <TextInput id="code" type="text" v-model="form.code" :invalid="form.errors.code"
-                                        required />
-                                    <InputError :message="form.errors.code" />
-                                </div>
-                                <div class="col-md-6">
-                                    <InputLabel for="name" value="Name" />
-                                    <TextInput id="name" type="text" v-model="form.name" :invalid="form.errors.name"
-                                        required />
-                                    <InputError :message="form.errors.name" />
+                                <div class="col-md-4">
+                                    <InputLabel for="content">
+                                        CSV <a :href="route(routeGroupName + '.template')">Get Template</a>
+                                    </InputLabel>
+                                    <input type="file" @input="form.csv = $event.target.files[0]" accept=".csv"
+                                        class="form-control" :class="{ 'is-invalid': form.errors.csv }" />
+                                    <InputError :message="form.errors.csv" />
                                 </div>
                             </div>
-
                         </div>
                         <!-- <div v-if="data.id" class="tab-pane fade pt-10" id="tab_2" role="tabpanel" aria-labelledby="tab_2">
                             Coming Soon
@@ -78,8 +66,7 @@ const form = useForm({
                 <div class="card-footer">
                     <div class="col-12">
                         <Link class="btn btn-secondary me-2" :href="route(routeGroupName + '.index')">Back</Link>
-                        <PrimaryButton type="submit" v-html="data.id == null ? 'Create' : 'Save'"
-                            :disabled="form.processing"></PrimaryButton>
+                        <PrimaryButton type="submit" v-html="'Upload'" :disabled="form.processing"></PrimaryButton>
                     </div>
                 </div>
             </div>

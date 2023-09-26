@@ -78,6 +78,10 @@ const destroy = (id, name) => {
                 <i class="bi bi-plus"></i>
                 Create
                 </Link>
+                <Link class="btn btn-outline-primary btn-sm" :href="route(routeGroupName + '.import')">
+                <i class="bi bi-filetype-csv"></i>
+                Import
+                </Link>
             </div>
 
             <table class="table table-bordered table-striped table-hover">

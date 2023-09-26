@@ -4,7 +4,7 @@ namespace App\Http\Plugins;
 
 use App\Http\Plugins\ApiCore;
 
-class AdruinoCall extends ApiCore
+class ArduinoCall extends ApiCore
 {
     public function __construct($endpoint)
     {
@@ -19,13 +19,13 @@ class AdruinoCall extends ApiCore
 
     public function postInUnlock($duration)
     {
-        $payload = ['door_open_seconds' => $duration];
+        $payload = ['duration' => $duration];
         return $this->post("in/unlock", $payload);
     }
 
     public function postOutUnlock($duration)
     {
-        $payload = ['door_open_seconds' => $duration];
+        $payload = ['duration' => $duration];
         return $this->post("out/unlock", $payload);
     }
 }

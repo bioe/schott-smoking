@@ -42,7 +42,8 @@ class HandleInertiaRequests extends Middleware
             'flash' => [
                 'message' => $request->session()->get('message'),
             ],
-            'menus' => $request->user() ? $request->user()->build_menu() : []
+            'menus' => $request->user() ? $request->user()->build_menu() : [],
+            'version' => config('app.version')
         ]);
     }
 }

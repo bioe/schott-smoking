@@ -257,7 +257,7 @@ const air_quality_bg = computed(() => {
         </div>
 
         <div class="nav col-md-4 justify-content-end list-unstyled d-flex me-2">
-            Smoking Monitoring System
+            Smoking Monitoring System v{{ $page.props.version }}
         </div>
     </footer>
 </template>

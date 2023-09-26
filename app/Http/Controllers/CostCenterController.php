@@ -91,4 +91,40 @@ class CostCenterController extends Controller
         $costCenter->delete();
         return Redirect::route('costcenters.index')->with('message', 'Cost Center deleted successfully');
     }
+
+    public function getImport()
+    {
+        return Inertia::render('CostCenter/Import', []);
+    }
+
+    public function postImport(Request $request)
+    {
+        if ($request->hasFile('csv')) {
+            $file = fopen($request->file('csv'), "r");
+
+            $data = [];
+            while (($column = fgetcsv($file)) != false) {
+                $data[] = ['code' => strtoupper($column[0]), 'name' => $column[1]];
+            }
+            CostCenter::upsert($data, ['code'], ['name']);
+            return Redirect::route('costcenters.index')->with('message', 'Import successfully');
+        }
+        return Redirect::route('costcenters.import');
+    }
+
+    public function getTemplate()
+    {
+        header("Content-Type: text/csv;charset=utf-8");
+        header("Content-Disposition: attachment;filename=\"cost_center_template.csv\"");
+        header("Pragma: no-cache");
+        header("Expires: 0");
+
+        $file = fopen('php://output', 'w');
+        header('Content-Type: text/csv');
+
+        $header = ['Code', 'Name'];
+        fputcsv($file, $header);
+        fclose($file);
+        exit();
+    }
 }

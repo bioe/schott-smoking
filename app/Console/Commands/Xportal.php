@@ -2,9 +2,8 @@
 
 namespace App\Console\Commands;
 
-use App\Http\Plugins\AdruinoCall;
-use App\Models\Sensor;
-use App\Models\Station;
+use App\Models\Employee;
+use App\Models\XportalEmployee;
 use Exception;
 use Illuminate\Console\Command;
 
@@ -29,5 +28,18 @@ class Xportal extends Command
      */
     public function handle()
     {
+        $emps = XportalEmployee::limit(10)->get();
+        foreach ($emps as $e) {
+            Employee::updateOrCreate(
+                [
+                    'card_id' => $e->Guid,
+                    'origin_id' => $e->Id,
+                ],
+                [
+                    'name' => $e->Mode,
+                    'cost_center_id' => null
+                ]
+            );
+        }
     }
 }

@@ -25,7 +25,7 @@ const form = useForm({
     stay_duration_seconds: props.data.stay_duration_seconds ?? 0,
     warning_below_seconds: props.data.warning_below_seconds ?? 0,
     disable_next_entry_seconds: props.data.disable_next_entry_seconds ?? 0,
-    door_open_seconds: props.data.door_open_seconds ?? 10,
+    door_open_seconds: props.data.door_open_seconds ?? 5,
     annoucement_interval: props.data.annoucement_interval ?? 5,
     banner_interval: props.data.banner_interval ?? 5,
     ip: props.data.ip ?? '',

@@ -2,7 +2,7 @@
 
 namespace App\Console\Commands;
 
-use App\Http\Plugins\AdruinoCall;
+use App\Http\Plugins\ArduinoCall;
 use App\Models\Sensor;
 use App\Models\Station;
 use Exception;
@@ -36,8 +36,9 @@ class ArduinoSensor extends Command
             $this->comment($station->ip);
 
             //Call Arduino Api
-            $call = new AdruinoCall($station->ip);
+            $call = new ArduinoCall($station->ip);
             try {
+
                 $response = $call->getSensors();
                 if ($response != null) {
                     //Save Value

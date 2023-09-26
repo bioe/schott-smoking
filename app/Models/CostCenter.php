@@ -15,6 +15,13 @@ class CostCenter extends BaseModel
         'name',
     ];
 
+    protected function code(): Attribute
+    {
+        return Attribute::make(
+            set: fn (string $value) => $value != null ? strtoupper($value) : null,
+        );
+    }
+
     public function users()
     {
         return $this->belongsToMany(User::class);
