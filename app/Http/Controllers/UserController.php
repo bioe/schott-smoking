@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\UserUpdateRequest;
 use App\Models\CostCenter;
+use App\Models\Station;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
@@ -73,12 +74,18 @@ class UserController extends Controller
         foreach ($costcenters as $cc) {
             $cost_center_list[] = ['value' => $cc->id, 'label' => $cc->code];
         }
+        $stations = Station::where('active', true)->get();
+        $station_list = [];
+        foreach ($stations as $sta) {
+            $station_list[] = ['value' => $sta->id, 'label' => $sta->name];
+        }
 
         return Inertia::render('User/Edit', [
             'data' => $data,
             'useUsername' => env(LOGIN_USERNAME, false),
             'menu_list' => $menu_list,
-            'cost_center_list' => $cost_center_list
+            'cost_center_list' => $cost_center_list,
+            'station_list' => $station_list
         ]);
     }
 
@@ -128,7 +135,7 @@ class UserController extends Controller
      * Save Cost Center
      */
 
-    public function patchCostCenter(Request $request, $id)
+    public function patchSettings(Request $request, $id)
     {
         $data = User::find($id);
         $data->cost_centers()->detach();
@@ -137,6 +144,12 @@ class UserController extends Controller
                 $data->cost_centers()->attach($id);
             }
         }
+
+        if ($request->has('remote_door_ids')) {
+            $data->remote_door_ids = $request->remote_door_ids;
+        }
+        $data->save();
+
         return Redirect::route('users.edit', $data->id)->with('message', 'Cost Center Updated');
     }
 }

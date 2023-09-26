@@ -103,6 +103,7 @@ const destroy = (id, name) => {
                             </button>
                         </td>
                         <td>{{ item.code }}</td>
+                        <td>{{ item.name }}</td>
                         <td>{{ formatDate(item.created_at) }}</td>
                     </tr>
                 </tbody>

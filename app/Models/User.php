@@ -46,6 +46,7 @@ class User extends Authenticatable //implements MustVerifyEmail
     protected $casts = [
         'email_verified_at' => 'datetime',
         'menu_permission' => 'array',
+        'remote_door_ids' => 'array'
     ];
 
     //Default attributes

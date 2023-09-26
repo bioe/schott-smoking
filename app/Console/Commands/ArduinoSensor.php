@@ -36,9 +36,8 @@ class ArduinoSensor extends Command
             $this->comment($station->ip);
 
             //Call Arduino Api
-            $call = new ArduinoCall($station->ip);
             try {
-
+                $call = new ArduinoCall($station->ip);
                 $response = $call->getSensors();
                 if ($response != null) {
                     //Save Value

@@ -36,6 +36,7 @@ class CostCenter extends BaseModel
         $headers = array();
         return array_merge($headers, [
             ['field' => 'code', 'title' => 'Code', 'sortable' => true],
+            ['field' => 'name', 'title' => 'Name', 'sortable' => true],
             ['field' => 'created_at', 'title' => 'Created At', 'sortable' => true],
         ]);
     }

@@ -1,7 +1,7 @@
 <script setup>
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
 import DetailForm from './Partials/DetailForm.vue';
-import CostCenterForm from './Partials/CostCenterForm.vue';
+import SettingForm from './Partials/SettingForm.vue';
 import { Head, router, useForm, Link } from '@inertiajs/vue3';
 import { ref } from 'vue';
 import MenuForm from './Partials/MenuForm.vue';
@@ -18,6 +18,9 @@ const props = defineProps({
         type: Array,
     },
     cost_center_list: {
+        type: Object,
+    },
+    station_list: {
         type: Object,
     }
 });
@@ -43,7 +46,7 @@ const headerTitle = ref('User');
                         <a class="nav-link" data-bs-toggle="tab" href="#tab_2">Menus</a>
                     </li>
                     <li v-if="data.id" class="nav-item">
-                        <a class="nav-link" data-bs-toggle="tab" href="#tab_3">Cost Centers</a>
+                        <a class="nav-link" data-bs-toggle="tab" href="#tab_3">Settings</a>
                     </li>
                 </ul>
             </div>
@@ -56,7 +59,7 @@ const headerTitle = ref('User');
                         <MenuForm v-bind:="$props" />
                     </div>
                     <div v-if="data.id" class="tab-pane fade pt-10" id="tab_3" role="tabpanel" aria-labelledby="tab_3">
-                        <CostCenterForm v-bind:="$props" />
+                        <SettingForm v-bind:="$props" />
                     </div>
                 </div>
             </div>

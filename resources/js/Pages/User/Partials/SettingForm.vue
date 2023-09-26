@@ -13,13 +13,17 @@ const props = defineProps({
     },
     cost_center_list: {
         type: Object,
+    },
+    station_list: {
+        type: Object,
     }
 });
 
-const routeGroupName = 'users.costcenter';
+const routeGroupName = 'users.settings';
 
 const form = useForm({
-    cost_center_ids: props.data.cost_center_ids ?? []
+    cost_center_ids: props.data.cost_center_ids ?? [],
+    remote_door_ids: props.data.remote_door_ids ?? []
 });
 </script>
 
@@ -31,6 +35,12 @@ const form = useForm({
                 <Multiselect v-model="form.cost_center_ids" mode="tags" :close-on-select="false" :searchable="true"
                     :create-option="true" :options="props.cost_center_list" />
                 <InputError :message="form.errors.cost_center_ids" />
+            </div>
+            <div class="col-md-6">
+                <InputLabel for="cost-center" value="Remote Door Control" />
+                <Multiselect v-model="form.remote_door_ids" mode="tags" :close-on-select="false" :searchable="true"
+                    :create-option="true" :options="props.station_list" />
+                <InputError :message="form.errors.remote_door_ids" />
             </div>
 
 

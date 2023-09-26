@@ -6,6 +6,7 @@ use App\Http\Controllers\BannerController;
 use App\Http\Controllers\EmployeeController;
 use App\Http\Controllers\EntryLogController;
 use App\Http\Controllers\CostCenterController;
+use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\StationController;
 use App\Http\Controllers\UserController;
@@ -36,20 +37,17 @@ Route::get('/', function () {
 Route::get('/area/{code}', [AreaController::class, 'index'])->name('area');
 Route::get('/area/{code}/latest', [AreaController::class, 'getLatest'])->name('area.latest');
 
-
-
-Route::get('/dashboard', function () {
-    return Inertia::render('Dashboard');
-})->middleware(['auth', 'verified'])->name('dashboard');
-
 Route::middleware('auth', 'admin')->group(function () {
+    Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
+    Route::post('/dashboard/opendoor', [DashboardController::class, 'postOpenDoor'])->name('dashboard.opendoor');
+
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 
     Route::prefix('users')->name('users.')->group(function () {
         Route::patch('menu/{id}', [UserController::class, 'patchMenu'])->name('menu.update');
-        Route::patch('costcenter/{id}', [UserController::class, 'patchCostcenter'])->name('costcenter.update');
+        Route::patch('settings/{id}', [UserController::class, 'patchSettings'])->name('settings.update');
     });
     Route::resource('users', UserController::class);
 
