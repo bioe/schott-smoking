@@ -149,6 +149,15 @@ if (!function_exists('hexToNumber')) {
             //invalid card_id
             return null;
         }
+
+        $second_char = substr($hex, 1, 1);
+        if (!preg_match("/[a-z]/i", $second_char)) {
+            //Second character not alphabet re-arrage first character to last character
+            $firstChar = substr($hex, 0, 1);
+            $substring = substr($hex, 1);
+            $hex = $substring . $firstChar;
+        }
+
         //UART Protocal 
         //always start from index 2, get 8 characters
         $front_hex = substr($hex, 2, strlen($hex) - 4);

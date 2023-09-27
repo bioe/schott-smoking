@@ -22,6 +22,7 @@ class AccessController extends Controller
 
         if ($request->has('card_id')) {
             $card_id = $request->card_id;
+        } else if ($request->has('card_hex_last')) {
         } else {
             $card_id = hexToNumber($request->card_hex);
         }
@@ -96,6 +97,7 @@ class AccessController extends Controller
 
         if ($request->has('card_id')) {
             $card_id = $request->card_id;
+        } else if ($request->has('card_hex_last')) {
         } else {
             $card_id = hexToNumber($request->card_hex);
         }
