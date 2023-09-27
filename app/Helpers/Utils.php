@@ -118,6 +118,7 @@ if (!function_exists('imgSanitize')) {
 if (!function_exists('getHoursMinutes')) {
     function getHoursMinutes($seconds, $short = true)
     {
+        if ($seconds == 0) return 0;
         $hours = floor($seconds / 3600);
         $minutes = floor(($seconds / 60) % 60);
         $seconds = $seconds % 60;

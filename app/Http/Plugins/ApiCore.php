@@ -65,7 +65,7 @@ abstract class ApiCore
         $ch = curl_init($url);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
         curl_setopt($ch, CURLOPT_HTTPHEADER, $this->headers());
-        curl_setopt($ch, CURLOPT_TIMEOUT, 5); //5 seconds
+        curl_setopt($ch, CURLOPT_TIMEOUT, 20); //20 seconds
 
         if ($method == "POST" || $method == "PUT") {
             curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($payload));
