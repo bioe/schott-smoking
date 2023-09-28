@@ -8,6 +8,6 @@ return [
     |--------------------------------------------------------------------------
     */
 
-    'polling_interval' => 5 * 1000 //Milliseconds
+    'polling_interval' => 3 * 1000 //Milliseconds
 
 ];

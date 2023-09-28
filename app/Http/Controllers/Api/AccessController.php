@@ -22,12 +22,17 @@ class AccessController extends Controller
 
         if ($request->has('card_id')) {
             $card_id = $request->card_id;
+            $request_card_data = $request->card_id;
         } else if ($request->has('card_hex_last')) {
+            $card_id = behindHexToNumber($request->card_hex_last);
+            $request_card_data = $request->card_hex_last;
         } else {
-            $card_id = hexToNumber($request->card_hex);
+            $card_id = frontHexToNumber($request->card_hex);
+            $request_card_data = $request->card_hex;
         }
+
         $employee = Employee::where('card_id', $card_id)->first();
-        if ($employee == null) return $this->logNRespone('Employee ' . $request->card_hex . "|" . $card_id . ' not found');
+        if ($employee == null) return $this->logNRespone('Employee ' . $request_card_data . "|" . $card_id . ' not found');
 
         //For record purpose only
         RawEntryLog::create([
@@ -97,12 +102,17 @@ class AccessController extends Controller
 
         if ($request->has('card_id')) {
             $card_id = $request->card_id;
+            $request_card_data = $request->card_id;
         } else if ($request->has('card_hex_last')) {
+            $card_id = behindHexToNumber($request->card_hex_last);
+            $request_card_data = $request->card_hex_last;
         } else {
-            $card_id = hexToNumber($request->card_hex);
+            $card_id = frontHexToNumber($request->card_hex);
+            $request_card_data = $request->card_hex;
         }
-        $employee = Employee::where('card_id',  $card_id)->first();
-        if ($employee == null) return $this->logNRespone('Employee ' .  $card_id . ' not found');
+
+        $employee = Employee::where('card_id', $card_id)->first();
+        if ($employee == null) return $this->logNRespone('Employee ' . $request_card_data . "|" . $card_id . ' not found');
 
         //For record purpose only
         RawEntryLog::create([

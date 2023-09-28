@@ -141,10 +141,15 @@ if (!function_exists('getHoursMinutes')) {
     }
 }
 
-if (!function_exists('hexToNumber')) {
-    function hexToNumber($hex)
+if (!function_exists('frontHexToNumber')) {
+    //Groove CardRead
+    function frontHexToNumber($hex)
     {
-        //Eg. Full Card 0009527380 145 24660
+        /*Eg. Full Card 0009527380 145 24660
+        * Incoming
+        * 0C00916054A9 - Correct
+        * 90C00916054A - Wrong
+        */
         if (strlen($hex) != 12) {
             //invalid card_id
             return null;
@@ -152,7 +157,9 @@ if (!function_exists('hexToNumber')) {
 
         $second_char = substr($hex, 1, 1);
         if (!preg_match("/[a-z]/i", $second_char)) {
+            //Incoming is wrong 
             //Second character not alphabet re-arrage first character to last character
+            //Sometime Arduino will mess up the character position
             $firstChar = substr($hex, 0, 1);
             $substring = substr($hex, 1);
             $hex = $substring . $firstChar;
@@ -164,6 +171,44 @@ if (!function_exists('hexToNumber')) {
         //convert from hex to decimal
         $front_number = hexdec($front_hex); //Front number 
         $behind_hex = dechex($front_number); //Convert to hex
+
+        $three = hexdec(substr($behind_hex, 0, 2)); //Split first 2 hex and convert to decimal
+        if (strlen($three) == 1) $three = "00" . $three; //if only 1 char add two zero
+        if (strlen($three) == 2) $three = "0" . $three; //if only 2 char add one zero
+        $four =  hexdec(substr($behind_hex, 2, 4)); //Split last 4 hex and convert to decimal
+
+        //Add 0 between the space
+        //Last 8 digit (0)145(0)24660
+        $real_card_id = "0" . $three . "0" . $four;
+        return   $real_card_id;
+    }
+}
+
+if (!function_exists('behindHexToNumber')) {
+    //From Shopee RFID RDM6300
+    function behindHexToNumber($hex)
+    {
+        /*Eg. Full Card 0006413739 097 56747
+        * Incoming
+        * 0B0061DDAB1C - Correct
+        */
+        if (strlen($hex) != 12) {
+            //invalid card_id
+            return null;
+        }
+
+        $second_char = substr($hex, 1, 1);
+        if (!preg_match("/[a-z]/i", $second_char)) {
+            //Second character not alphabet re-arrage first character to last character
+            //Sometime Arduino will mess up the character position
+            $firstChar = substr($hex, 0, 1);
+            $substring = substr($hex, 1);
+            $hex = $substring . $firstChar;
+        }
+
+        //UART Protocal 
+        //always start from index 4, get 8 characters
+        $behind_hex = substr($hex, 4, strlen($hex) - 4);
 
         $three = hexdec(substr($behind_hex, 0, 2)); //Split first 2 hex and convert to decimal
         if (strlen($three) == 1) $three = "00" . $three; //if only 1 char add two zero
