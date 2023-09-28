@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Casts\Attribute;
 class XportalEmployee extends BaseModel
 {
     protected $connection = 'sqlsrv';
-    protected $table = "Machines";
+    protected $table = "tbl_StaffDetails";
     /**
      * The attributes that are mass assignable.
      *

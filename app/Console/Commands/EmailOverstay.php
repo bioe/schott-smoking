@@ -12,7 +12,7 @@ use Exception;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Mail;
 
-class Xportal extends Command
+class EmailOverstay extends Command
 {
     /**
      * The name and signature of the console command.
