@@ -2,7 +2,11 @@
     Hi {{ $name }},
 </p>
 <p>
-    Number of Overstay Records: <b>{{ $list->count() }}</b>
+    Number of Overstay Records: <b>
+        @if ($list != null)
+            {{ $list->count() }}
+        @endif
+    </b>
 </p>
 
 <p>
