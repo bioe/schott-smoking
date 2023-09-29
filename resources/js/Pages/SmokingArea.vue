@@ -79,7 +79,7 @@ onMounted(
 
 function bannerNextSlide(index) {
     //Not video then wait for banner_interval
-    let data = splide_banner.value.splide.Components.Elements.slides[index].getAttribute('data-isvideo');
+    let data = splide_banner.value.splide.Components.Elements.slides[index]?.getAttribute('data-isvideo');
     if (data == "false") {
         setTimeout(() => {
             splide_banner.value.splide.go('>');
