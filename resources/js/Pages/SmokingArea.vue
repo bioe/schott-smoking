@@ -39,6 +39,16 @@ const splide_annoucement = ref();
 const splide_banner = ref();
 const extensions = { Video }
 
+//Annoucement
+const annoucement_options = {
+    rewind: true,
+    autoWidth: true,
+    autoplay: true,
+    interval: props.annoucement_interval,
+    arrows: false, pagination: false,
+    heightRatio: 0.04,
+}
+
 //Banner
 const options = {
     type: "loop",
@@ -50,7 +60,7 @@ const options = {
         mute: true,
         autoplay: true,
     },
-    heightRatio: 0.69, //Chrome full screen in TV
+    heightRatio: 0.76, //Chrome full screen in TV
 };
 
 onMounted(
@@ -154,7 +164,7 @@ const air_quality_bg = computed(() => {
     <Head title="Dashboard" />
 
     <div class="d-flex flex-column min-vh-100">
-        <main class="flex-grow-1">
+        <main class="flex-grow-1 p-2">
             <div class="row mb-3">
                 <div class="col-lg-3 text-light">
                     <div class="sensor-column schott-colour text-center rounded-3"
@@ -192,9 +202,8 @@ const air_quality_bg = computed(() => {
             <div class="row mb-3">
                 <div class="col-lg-12">
                     <div class="h-100 p-3 box-bg border rounded-3">
-                        <Splide ref="splide_annoucement"
-                            :options="{ rewind: true, autoWidth: true, autoplay: true, interval: annoucement_interval, arrows: false, pagination: false, heightRatio: 0.05, }"
-                            aria-label="Annoucements" style="height:100%">
+                        <Splide ref="splide_annoucement" :options="annoucement_options" aria-label="Annoucements"
+                            style="height:100%">
                             <SplideSlide v-for="annoucement in props.annoucement_list" class="fs-4 text-light"
                                 style="width:100%">
                                 <span v-html="annoucement.html_content"></span>
