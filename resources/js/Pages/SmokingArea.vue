@@ -50,7 +50,7 @@ const options = {
         mute: true,
         autoplay: true,
     },
-    heightRatio: 0.79, //Chrome full screen in TV
+    heightRatio: 0.69, //Chrome full screen in TV
 };
 
 onMounted(
@@ -152,107 +152,111 @@ const air_quality_bg = computed(() => {
 
 <template>
     <Head title="Dashboard" />
-    <div class="container-fluid p-3 full-height">
-        <div class="row mb-3">
-            <div class="col-lg-3 text-light">
-                <div class="sensor-column schott-colour text-center rounded-3"
-                    style="min-height: 142.4px; max-height: 142.4px;">
-                    <img src="/assets/schott-logo.png" style="height: 80px; margin-top: 2rem; margin-bottom: 2rem;"
-                        alt="logo" />
 
-                    <!-- <object type="image/svg+xml" data="/assets/schott-logo.svg" height="121px"></object> -->
-                    <!-- {{ currentDate.toLocaleDateString(undefined, { weekday: 'long' }) }} <br />
+    <div class="d-flex flex-column min-vh-100">
+        <main class="flex-grow-1">
+            <div class="row mb-3">
+                <div class="col-lg-3 text-light">
+                    <div class="sensor-column schott-colour text-center rounded-3"
+                        style="min-height: 142.4px; max-height: 142.4px;">
+                        <img src="/assets/schott-logo.png" style="height: 80px; margin-top: 2rem; margin-bottom: 2rem;"
+                            alt="logo" />
+
+                        <!-- <object type="image/svg+xml" data="/assets/schott-logo.svg" height="121px"></object> -->
+                        <!-- {{ currentDate.toLocaleDateString(undefined, { weekday: 'long' }) }} <br />
                     {{ currentDate.toLocaleDateString(undefined, { day: '2-digit' }) }} {{
                         currentDate.toLocaleDateString(undefined, { month: 'short' }) }} <br />
                     {{ currentDate.toLocaleTimeString(undefined, { hour: '2-digit', minute: '2-digit', second: '2-digit' })
                     }} -->
+                    </div>
+                </div>
+                <div class="col-lg-3 text-light">
+                    <div class="sensor-column text-center rounded-3" :class="max_pax_bg">
+                        <h2>Pax</h2>
+                        {{ current_pax }}
+                    </div>
+                </div>
+                <div class="col-lg-3 text-light">
+                    <div class="sensor-column text-center rounded-3" :class="air_quality_bg">
+                        <h2>Air Index</h2>
+                        {{ air }}
+                    </div>
+                </div>
+                <div class="col-lg-3 text-light">
+                    <div class="sensor-column text-center rounded-3 bg-success">
+                        <h2>Temperature</h2>
+                        {{ temperature }}
+                    </div>
                 </div>
             </div>
-            <div class="col-lg-3 text-light">
-                <div class="sensor-column text-center rounded-3" :class="max_pax_bg">
-                    <h2>Pax</h2>
-                    {{ current_pax }}
+            <div class="row mb-3">
+                <div class="col-lg-12">
+                    <div class="h-100 p-3 box-bg border rounded-3">
+                        <Splide ref="splide_annoucement"
+                            :options="{ rewind: true, autoWidth: true, autoplay: true, interval: annoucement_interval, arrows: false, pagination: false, heightRatio: 0.05, }"
+                            aria-label="Annoucements" style="height:100%">
+                            <SplideSlide v-for="annoucement in props.annoucement_list" class="fs-4 text-light"
+                                style="width:100%">
+                                <span v-html="annoucement.html_content"></span>
+                            </SplideSlide>
+                        </Splide>
+                    </div>
                 </div>
             </div>
-            <div class="col-lg-3 text-light">
-                <div class="sensor-column text-center rounded-3" :class="air_quality_bg">
-                    <h2>Air Index</h2>
-                    {{ air }}
+            <div class="row">
+                <div class="col-lg-6">
+                    <div class="h-100 p-3 box-bg border rounded-3">
+                        <table class="table table-bordered table-striped table-dark">
+                            <thead>
+                                <tr class="schott-colour-dark text-light fs-3">
+                                    <HeadRow width="20%">ID</HeadRow>
+                                    <HeadRow>Name</HeadRow>
+                                    <HeadRow width="10%">Remaining</HeadRow>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr v-for="(item, index) in list" class="fs-3">
+                                    <td :class="warningColour(item.warning_date, item.finish_date)">{{ item.card_id }}</td>
+                                    <td :class="warningColour(item.warning_date, item.finish_date)">{{ item.employee?.name
+                                    }}
+                                    </td>
+                                    <td class="text-center" :class="warningColour(item.warning_date, item.finish_date)">
+                                        {{ item.timer?.minutes }}:{{
+                                            item.timer?.seconds.toLocaleString(undefined, {
+                                                minimumIntegerDigits: 2
+                                            }) }} </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
                 </div>
-            </div>
-            <div class="col-lg-3 text-light">
-                <div class="sensor-column text-center rounded-3 bg-success">
-                    <h2>Temperature</h2>
-                    {{ temperature }}
-                </div>
-            </div>
-        </div>
-
-        <div class="row mb-3">
-            <div class="col-lg-12">
-                <div class="h-100 p-3 box-bg border rounded-3">
-                    <Splide ref="splide_annoucement"
-                        :options="{ rewind: true, autoWidth: true, autoplay: true, interval: annoucement_interval, arrows: false, pagination: false }"
-                        aria-label="Annoucements" style="height:100%">
-                        <SplideSlide v-for="annoucement in props.annoucement_list" class="fs-4 text-light"
-                            style="width:100%">
-                            <span v-html="annoucement.html_content"></span>
-                        </SplideSlide>
+                <div class="col-lg-6">
+                    <Splide ref="splide_banner" aria-labelledby="video-image-slider" :options="options"
+                        :extensions="extensions">
+                        <template v-for="banner in banner_list">
+                            <SplideSlide v-if="banner.type == 'video'" :data-splide-html-video="banner.full_path"
+                                data-isvideo="true">
+                                <img :src="`/assets/play-icon.png`" />
+                            </SplideSlide>
+                            <SplideSlide v-else data-isvideo="false">
+                                <img :src="banner.full_path">
+                            </SplideSlide>
+                        </template>
                     </Splide>
                 </div>
             </div>
-        </div>
 
-        <div class="row">
-            <div class="col-lg-6">
-                <div class="h-100 p-3 box-bg border rounded-3">
-                    <table class="table table-bordered table-striped table-dark">
-                        <thead>
-                            <tr class="schott-colour-dark text-light fs-3">
-                                <HeadRow width="20%">ID</HeadRow>
-                                <HeadRow>Name</HeadRow>
-                                <HeadRow width="10%">Remaining</HeadRow>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr v-for="(item, index) in list" class="fs-3">
-                                <td :class="warningColour(item.warning_date, item.finish_date)">{{ item.card_id }}</td>
-                                <td :class="warningColour(item.warning_date, item.finish_date)">{{ item.employee?.name }}
-                                </td>
-                                <td class="text-center" :class="warningColour(item.warning_date, item.finish_date)">
-                                    {{ item.timer?.minutes }}:{{
-                                        item.timer?.seconds.toLocaleString(undefined, {
-                                            minimumIntegerDigits: 2
-                                        }) }} </td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
+        </main>
+        <footer class="d-flex flex-wrap justify-content-between align-items-center py-2 my-1 border-top">
+            <div class="col-md-4 d-flex align-items-center ms-2">
+                <img src="/assets/bio-blue.png" style="width:15%" />
+                <span class="mb-3 mb-md-0 text- 
+                body-secondary">© 2023 Bionergy Project</span>
             </div>
-            <div class="col-lg-6">
-                <Splide ref="splide_banner" aria-labelledby="video-image-slider" :options="options"
-                    :extensions="extensions">
-                    <template v-for="banner in banner_list">
-                        <SplideSlide v-if="banner.type == 'video'" :data-splide-html-video="banner.full_path"
-                            data-isvideo="true">
-                            <img :src="`/assets/play-icon.png`" />
-                        </SplideSlide>
-                        <SplideSlide v-else data-isvideo="false">
-                            <img :src="banner.full_path">
-                        </SplideSlide>
-                    </template>
-                </Splide>
+
+            <div class="nav col-md-4 justify-content-end list-unstyled d-flex me-2">
+                Smoking Monitoring System v{{ $page.props.version }}
             </div>
-        </div>
+        </footer>
     </div>
-    <footer class="d-flex flex-wrap justify-content-between align-items-center py-3 my-4 border-top">
-        <div class="col-md-4 d-flex align-items-center ms-2">
-            <img src="/assets/bio-blue.png" style="width:15%" />
-            <span class="mb-3 mb-md-0 text-body-secondary">© 2023 Bionergy Project</span>
-        </div>
-
-        <div class="nav col-md-4 justify-content-end list-unstyled d-flex me-2">
-            Smoking Monitoring System v{{ $page.props.version }}
-        </div>
-    </footer>
 </template>
