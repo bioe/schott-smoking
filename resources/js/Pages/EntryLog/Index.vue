@@ -39,6 +39,12 @@ const submit = () => {
     });
 };
 
+const destroy = (id, name) => {
+    const c = confirm(`Delete this entry ${name} ?`);
+    if (c) {
+        router.delete(route(routeGroupName + '.destroy', id));
+    }
+};
 
 </script>
 
@@ -114,18 +120,19 @@ const submit = () => {
             <table class="table table-bordered table-striped table-hover">
                 <thead>
                     <tr>
-                        <!-- <HeadRow>Actions</HeadRow> -->
+                        <HeadRow>Actions</HeadRow>
                         <HeadRow v-for="head in header" :field="head.field" :sort="head.sortable ? filters.sort : null"
                             @sortEvent="sort" :disabled="form.processing">{{ head.title }}</HeadRow>
                     </tr>
                 </thead>
                 <tbody>
                     <tr v-for="(item, index) in list.data">
-                        <!-- <td width="10%">
-                            <button @click="destroy(item.id, item.name)" class="btn btn-sm btn-link">
+                        <td width="10%">
+                            <button v-if="item.can_delete_entry" @click="destroy(item.id, item.employee?.card_id)"
+                                class="btn btn-sm btn-link">
                                 <i class="bi bi-trash"></i>
                             </button>
-                        </td> -->
+                        </td>
                         <td>{{ item.employee?.card_id }}</td>
                         <td>{{ item.employee?.name }}</td>
                         <td>{{ item.station?.name }}</td>
