@@ -42,6 +42,8 @@ class EntryLogController extends Controller
                 $q->where('overstay_seconds', '>', 0);
             })->when(!empty($filters['overstay'] != null && $filters['overstay'] == 'no'), function ($q) {
                 $q->where('overstay_seconds', 0);
+            })->when(!empty($filters['station_id'] != null), function ($q) use ($filters) {
+                $q->where('station_id', $filters['station_id']);
             })->byCostCenter(Auth::user())->filterSort($filters)->orderBy('created_at', 'desc')->paginate(config('forms.paginate'));
 
         $station_list = Station::all();
@@ -92,9 +94,9 @@ class EntryLogController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(EntryLog $entryLog)
+    public function destroy(EntryLog $entrylog)
     {
-        $entryLog->delete();
-        return Redirect::route('EntryLog.index')->with('message', 'Log deleted successfully');
+        $entrylog->delete();
+        return Redirect::route('entrylogs.index')->with('message', 'Log deleted successfully');
     }
 }

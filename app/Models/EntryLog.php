@@ -45,7 +45,7 @@ class EntryLog extends BaseModel
     protected $attributes = [];
 
     protected $appends = [
-        'finished_at', 'stay_label'
+        'finished_at', 'stay_label', 'can_delete_entry'
     ];
 
     public function finishedAt(): Attribute
@@ -59,6 +59,15 @@ class EntryLog extends BaseModel
     {
         return Attribute::make(
             get: fn (mixed $value, array $attributes) => isset($attributes['actual_stay_duration_seconds']) && $attributes['actual_stay_duration_seconds'] != null ? getHoursMinutes($attributes['actual_stay_duration_seconds']) : ''
+        );
+    }
+
+    public function canDeleteEntry(): Attribute
+    {
+        return Attribute::make(
+            get: fn (mixed $value, array $attributes) =>  $attributes['exit_time'] == null &&
+                isset($attributes['enter_time']) &&
+                Carbon::createFromFormat(date_extract_format($attributes['enter_time']), $attributes['enter_time'])->diffInHours(Carbon::now()) > 1
         );
     }
 
