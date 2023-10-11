@@ -35,10 +35,12 @@ const list = ref([]);
 const air = ref(0);
 const temperature = ref(0);
 const currentDate = ref(new Date());
+const messages = ref([]);
+let msgModal = null;
+
 const splide_annoucement = ref();
 const splide_banner = ref();
 const extensions = { Video }
-
 //Annoucement
 const annoucement_options = {
     rewind: true,
@@ -63,8 +65,12 @@ const options = {
     heightRatio: 0.76, //Chrome full screen in TV
 };
 
+
 onMounted(
     () => {
+        //Initialize Modal
+        msgModal = new bootstrap.Modal('#msgModal');
+
         //Mix of Image and Video, have to manually control the slider
         if (splide_banner.value) {
             splide_banner.value.splide.on('video:ended', (rate) => {
@@ -83,6 +89,7 @@ onMounted(
         refresh();
         setInterval(updateDateTime, 900);
         setInterval(refresh, props.polling_interval);
+
 
     }
 )
@@ -132,6 +139,13 @@ function refresh() {
         list.value = response.data.list;
         air.value = response.data.air ?? 0;
         temperature.value = response.data.temperature ?? 0;
+
+        if (response.data.messages != null && response.data.messages.length > 0) {
+            messages.value = response.data.messages;
+            msgModal.show();
+        } else {
+            msgModal.hide();
+        }
     });
 }
 
@@ -267,5 +281,20 @@ const air_quality_bg = computed(() => {
                 Smoking Monitoring System v{{ $page.props.version }}
             </div>
         </footer>
+    </div>
+
+    <div class="modal fade" id="msgModal" tabindex="-1" aria-labelledby="msgModalLabel" aria-hidden="true">
+        <!-- Vertically centered modal -->
+        <div class="modal-dialog modal-dialog-centered modal-lg">
+            <div class="modal-content">
+                <div class="modal-body">
+                    <ul>
+                        <li v-for="msg in messages" class="fs-3">
+                            {{ msg.msg }}
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
     </div>
 </template>

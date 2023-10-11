@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use App\Models\Employee;
 use App\Models\EntryLog;
+use App\Models\MessageLog;
 use App\Models\RawEntryLog;
 use App\Models\Station;
 use Carbon\Carbon;
@@ -32,7 +33,10 @@ class AccessController extends Controller
         }
 
         $employee = Employee::where('card_id', $card_id)->first();
-        if ($employee == null) return $this->logNRespone('Employee ' . $request_card_data . "|" . $card_id . ' not found');
+        if ($employee == null) {
+            \Log::channel('entry')->info('Employee ' . $request_card_data . "|" . $card_id . ' not found'); //Some detail msg cannot be shown
+            return $this->logNRespone('Employee ' . $card_id . ' not found', $station->id, true);
+        }
 
         //For record purpose only
         RawEntryLog::create([
@@ -51,7 +55,7 @@ class AccessController extends Controller
         } else {
             //Check is max pax
             $total_entry = EntryLog::enterOnly()->where('station_id', $station->id)->count();
-            if ($total_entry >= $station->max_pax)  return $this->logNRespone($employee->card_id . ', Current pax:' . $total_entry . ' Reach max capacity:' . $station->max_pax);
+            if ($total_entry >= $station->max_pax)  return $this->logNRespone($employee->card_id . ', Current pax:' . $total_entry . ' Reach max capacity:' . $station->max_pax, $station->id, true);
 
             //A complete entry (got both enter + exit) prevent next entry all station until the delay is lift off
             $complete_entry = EntryLog::complete()->where('employee_id', $employee->id)
@@ -61,14 +65,14 @@ class AccessController extends Controller
                 $complete_entry != null &&
                 Carbon::now()->diffInSeconds($complete_entry->exit_time) < $complete_entry->disable_next_entry_seconds
             ) {
-                return $this->logNRespone($employee->card_id . ', Last entry exit at ' . $complete_entry->exit_time . ', need to wait ' . $complete_entry->disable_next_entry_seconds);
+                return $this->logNRespone($employee->card_id . ', Last entry exit at ' . $complete_entry->exit_time . ', need to wait ' . $complete_entry->disable_next_entry_seconds, $station->id, true);
             }
 
             if (env('ENTRY_MODE') == "STRICT") {
                 //Strict Check, need to have exit only can continue
                 $exit = EntryLog::whereNull('exit_time')->where('employee_id', $employee->id)->where('maintenance', 0)->first();
                 if ($exit != null) {
-                    return $this->logNRespone($employee->card_id . ', Last entry enter at ' . $exit->enter_time . ', cannot enter again. You need to exit first.');
+                    return $this->logNRespone($employee->card_id . ', Last entry enter at ' . $exit->enter_time . ', cannot enter again. You need to exit first.', $station->id, true);
                 }
             }
         }
@@ -112,7 +116,10 @@ class AccessController extends Controller
         }
 
         $employee = Employee::where('card_id', $card_id)->first();
-        if ($employee == null) return $this->logNRespone('Employee ' . $request_card_data . "|" . $card_id . ' not found');
+        if ($employee == null) {
+            \Log::channel('entry')->info('Employee ' . $request_card_data . "|" . $card_id . ' not found');
+            return $this->logNRespone('Employee ' . $card_id . ' not found', $station->id, true);
+        }
 
         //For record purpose only
         RawEntryLog::create([
@@ -131,7 +138,7 @@ class AccessController extends Controller
                 $q->enterOnly();
             })
             ->orderBy('created_at', 'desc')->first();
-        if ($entry == null) return $this->logNRespone($employee->card_id . ', Missing Enter Entry Log');
+        if ($entry == null) return $this->logNRespone($employee->card_id . ', Missing Enter Entry Log', $station->id, true);
 
         //No Exit time only proceed to save
         if ($entry->exit_time == null) {
@@ -151,8 +158,16 @@ class AccessController extends Controller
         return response()->json(['door_open_seconds' => $station->door_open_seconds]);
     }
 
-    public function logNRespone($msg)
+    public function logNRespone($msg, $station_id = null, $store = false)
     {
+        if ($store) {
+            MessageLog::create(
+                [
+                    'msg' => $msg,
+                    'station_id' => $station_id
+                ]
+            );
+        }
         \Log::channel('entry')->info($msg);
         return response()->json(['message' => $msg], 400);
     }
