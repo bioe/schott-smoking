@@ -50,7 +50,7 @@ class AreaController extends Controller
         $list = EntryLog::with('employee')->enterOnly()->where('station_id', $station->id)->orderBy('enter_time')->get();
         $announcement = Annoucement::where('active', true)->orderBy('updated_at', 'desc')->first();
         $banner = Banner::where('active', true)->orderBy('updated_at', 'desc')->first();
-        $messages = MessageLog::whereBetween('created_at', [Carbon::now()->subMilliseconds(config('area.polling_interval', 0) * 3), Carbon::now()])->get(); //Show last x seconds messages
+        $messages = MessageLog::where('station_id', $station->id)->whereBetween('created_at', [Carbon::now()->subMilliseconds(config('area.polling_interval', 0) * 3), Carbon::now()])->get(); //Show last x seconds messages
 
         $data['list'] = $list;
         $data['annoucement_last_update'] = $announcement ? $announcement->updated_at : null;
