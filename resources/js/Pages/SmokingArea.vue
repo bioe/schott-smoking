@@ -238,12 +238,16 @@ const air_quality_bg = computed(() => {
                                 </tr>
                             </thead>
                             <tbody>
-                                <tr v-for="(item, index) in list" class="fs-3">
-                                    <td :class="warningColour(item.warning_date, item.finish_date)">{{ item.card_id }}</td>
-                                    <td :class="warningColour(item.warning_date, item.finish_date)">{{ item.employee?.name
-                                    }}
+                                <tr v-for="(item, index) in list">
+                                    <td class="fs-3" :class="warningColour(item.warning_date, item.finish_date)">{{
+                                        item.card_id }}</td>
+                                    <td class="fs-4 align-middle text-truncate" style="max-width: 150px;"
+                                        :class="warningColour(item.warning_date, item.finish_date)">{{
+                                            item.employee?.name
+                                        }}
                                     </td>
-                                    <td class="text-center" :class="warningColour(item.warning_date, item.finish_date)">
+                                    <td class="text-center fs-3"
+                                        :class="warningColour(item.warning_date, item.finish_date)">
                                         {{ item.timer?.minutes }}:{{
                                             item.timer?.seconds.toLocaleString(undefined, {
                                                 minimumIntegerDigits: 2
