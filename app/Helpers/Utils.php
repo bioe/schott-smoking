@@ -188,9 +188,10 @@ if (!function_exists('behindHexToNumber')) {
     //From Shopee RFID RDM6300
     function behindHexToNumber($hex)
     {
-        /*Eg. Full Card 0006413739 097 56747
+        /*Eg. 
         * Incoming
-        * 0B0061DDAB1C - Correct
+        * 0006413739 097 56747 = 0B0061DDAB1C - Correct
+        * 0006423272 098 00744 = 0B006202E838 - Correct
         */
         if (strlen($hex) != 12) {
             //invalid card_id
@@ -209,15 +210,25 @@ if (!function_exists('behindHexToNumber')) {
         //UART Protocal 
         //always start from index 4, get 8 characters
         $behind_hex = substr($hex, 4, strlen($hex) - 4);
-
         $three = hexdec(substr($behind_hex, 0, 2)); //Split first 2 hex and convert to decimal
-        if (strlen($three) == 1) $three = "00" . $three; //if only 1 char add two zero
-        if (strlen($three) == 2) $three = "0" . $three; //if only 2 char add one zero
-        $four =  hexdec(substr($behind_hex, 2, 4)); //Split last 4 hex and convert to decimal
+        //if not three char append extra zero
+        if (strlen($three) != 3) {
+            for ($i = 0; $i <= (3 - strlen($three)); $i++) {
+                $three = "0" . $three;
+            }
+        }
+
+        $five =  hexdec(substr($behind_hex, 2, 4)); //Split last 4 hex and convert to decimal
+        //if not five char append extra zero
+        if (strlen($five) != 5) {
+            for ($i = 0; $i <= (5 - strlen($five)); $i++) {
+                $five = "0" . $five;
+            }
+        }
 
         //Add 0 between the space
         //Last 8 digit (0)145(0)24660
-        $real_card_id = "0" . $three . "0" . $four;
+        $real_card_id = "0" . $three . "0" . $five;
         return   $real_card_id;
     }
 }
