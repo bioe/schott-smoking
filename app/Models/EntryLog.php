@@ -3,9 +3,8 @@
 namespace App\Models;
 
 use Carbon\Carbon;
-use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Casts\Attribute;
-
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class EntryLog extends BaseModel
 {
@@ -27,7 +26,7 @@ class EntryLog extends BaseModel
         'actual_stay_duration_seconds', //How long is the stay enter + exit time
         'disable_next_entry_seconds',
         'overstay_seconds',
-        'maintenance'
+        'maintenance',
     ];
 
     /**
@@ -38,36 +37,35 @@ class EntryLog extends BaseModel
     protected $casts = [
         'enter_time' => 'datetime',
         'exit_time' => 'datetime',
-        'maintenance' => 'boolean'
+        'maintenance' => 'boolean',
     ];
 
     //Default attributes
     protected $attributes = [];
 
     protected $appends = [
-        'finished_at', 'stay_label', 'can_delete_entry'
+        'finished_at', 'stay_label', 'can_delete_entry',
     ];
 
     public function finishedAt(): Attribute
     {
         return Attribute::make(
-            get: fn (mixed $value, array $attributes) => isset($attributes['enter_time']) ? Carbon::createFromFormat(date_extract_format($attributes['enter_time']), $attributes['enter_time'])->addSeconds($attributes['stay_duration_seconds']) : null
+            get: fn(mixed $value, array $attributes) => isset($attributes['enter_time']) ? Carbon::createFromFormat(date_extract_format($attributes['enter_time']), $attributes['enter_time'])->addSeconds($attributes['stay_duration_seconds']) : null
         );
     }
 
     public function stayLabel(): Attribute
     {
         return Attribute::make(
-            get: fn (mixed $value, array $attributes) => isset($attributes['actual_stay_duration_seconds']) && $attributes['actual_stay_duration_seconds'] != null ? getHoursMinutes($attributes['actual_stay_duration_seconds']) : ''
+            get: fn(mixed $value, array $attributes) => isset($attributes['actual_stay_duration_seconds']) && null != $attributes['actual_stay_duration_seconds'] ? getHoursMinutes($attributes['actual_stay_duration_seconds']) : ''
         );
     }
 
     public function canDeleteEntry(): Attribute
     {
         return Attribute::make(
-            get: fn (mixed $value, array $attributes) =>  $attributes['exit_time'] == null &&
-                isset($attributes['enter_time']) &&
-                Carbon::createFromFormat(date_extract_format($attributes['enter_time']), $attributes['enter_time'])->diffInHours(Carbon::now()) > 1
+            get: fn(mixed $value, array $attributes) => isset($attributes['enter_time']) && null == $attributes['exit_time'] &&
+            Carbon::createFromFormat(date_extract_format($attributes['enter_time']), $attributes['enter_time'])->diffInHours(Carbon::now()) > 1
         );
     }
 
@@ -94,7 +92,7 @@ class EntryLog extends BaseModel
     //View related Cost Center Employee Only
     public function scopeByCostCenter($query, User $user)
     {
-        return $query->when($user != null && $user->cost_centers->count() > 0, function ($q) use ($user) {
+        return $query->when(null != $user && $user->cost_centers->count() > 0, function ($q) use ($user) {
             $q->whereHas('employee', function ($q) use ($user) {
                 $q->whereIn('cost_center_id', $user->cost_centers->pluck('id'));
             });
@@ -104,8 +102,8 @@ class EntryLog extends BaseModel
     //Static Functions Below Here
 
     /*
-    * Build Table Header
-    */
+     * Build Table Header
+     */
     public static function header()
     {
         $headers = array();
