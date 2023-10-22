@@ -5,7 +5,6 @@ namespace App\Console\Commands;
 use App\Models\CostCenter;
 use App\Models\Employee;
 use App\Models\XportalEmployee;
-use Exception;
 use Illuminate\Console\Command;
 
 class Xportal extends Command
@@ -31,6 +30,7 @@ class Xportal extends Command
     {
         $this->comment('Start Query Employee');
 
+        //TCCode, StaffNo, CardNo, TName, Branch, Divison, Dept_Code, Job_Code, Shift_Code, Amcard, SuperCard, StartDt, EndDt, AttCaptureDoorGrp. CompanyName, DoorAcc_Code, FlAcc_Code
         $emps = XportalEmployee::limit(10)->get();
         foreach ($emps as $e) {
 
@@ -49,7 +49,8 @@ class Xportal extends Command
                 ],
                 [
                     'name' => trim($e->TName),
-                    'cost_center_id' => $cc ? $cc->id : null
+                    'cost_center_id' => $cc ? $cc->id : null,
+                    'staff_no' => $e->StaffNo,
                 ]
             );
         }
