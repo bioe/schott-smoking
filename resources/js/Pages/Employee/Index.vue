@@ -114,7 +114,8 @@ const destroy = (id, name) => {
                                 <i class="bi bi-trash"></i>
                             </button>
                         </td>
-                        <td :class="item.active == 0 ? 'text-danger' : ''">{{ item.card_id }}</td>
+                        <td :class="item.active == 0 ? 'text-danger' : ''">{{ item.staff_no }}</td>
+                        <td>{{ item.card_id }}</td>
                         <td>{{ item.name }}</td>
                         <td>{{ item.cost_center?.code }}</td>
                         <td>{{ formatDate(item.created_at) }}</td>

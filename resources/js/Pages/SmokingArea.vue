@@ -232,7 +232,7 @@ const air_quality_bg = computed(() => {
                         <table class="table table-bordered table-striped table-dark">
                             <thead>
                                 <tr class="schott-colour-dark text-light fs-3">
-                                    <HeadRow width="20%">ID</HeadRow>
+                                    <HeadRow width="20%">No</HeadRow>
                                     <HeadRow>Name</HeadRow>
                                     <HeadRow width="10%">Remaining</HeadRow>
                                 </tr>
@@ -240,7 +240,7 @@ const air_quality_bg = computed(() => {
                             <tbody>
                                 <tr v-for="(item, index) in list">
                                     <td class="fs-3" :class="warningColour(item.warning_date, item.finish_date)">{{
-                                        item.card_id }}</td>
+                                        item.employee?.staff_no }}</td>
                                     <td class="fs-4 align-middle text-truncate" style="max-width: 150px;"
                                         :class="warningColour(item.warning_date, item.finish_date)">{{
                                             item.employee?.name

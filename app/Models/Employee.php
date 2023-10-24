@@ -2,8 +2,8 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Casts\Attribute;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Employee extends BaseModel
 {
@@ -20,7 +20,8 @@ class Employee extends BaseModel
         'cost_center_id',
         'maintenance',
         'origin_id',
-        'active'
+        'active',
+        'staff_no',
     ];
 
     /**
@@ -30,7 +31,7 @@ class Employee extends BaseModel
      */
     protected $casts = [
         'active' => 'boolean',
-        'maintenance' => 'boolean'
+        'maintenance' => 'boolean',
     ];
 
     //Default attributes
@@ -54,7 +55,7 @@ class Employee extends BaseModel
     //View related Cost Center Employee Only
     public function scopeByCostCenter($query, User $user)
     {
-        return $query->when($user != null && $user->cost_centers->count() > 0, function ($q) use ($user) {
+        return $query->when(null != $user && $user->cost_centers->count() > 0, function ($q) use ($user) {
             $q->whereIn('cost_center_id', $user->cost_centers->pluck('id'));
         });
     }
@@ -62,12 +63,13 @@ class Employee extends BaseModel
     //Static Functions Below Here
 
     /*
-    * Build Table Header
-    */
+     * Build Table Header
+     */
     public static function header()
     {
         $headers = array();
         return array_merge($headers, [
+            ['field' => 'staff_no', 'title' => 'Staff No', 'sortable' => true],
             ['field' => 'card_id', 'title' => 'Card ID', 'sortable' => true],
             ['field' => 'name', 'title' => 'Name', 'sortable' => true],
             ['field' => 'cost_center_id', 'title' => 'Cost Center'],

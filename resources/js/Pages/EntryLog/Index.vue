@@ -6,6 +6,7 @@ import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
 import { Head, router, useForm, Link } from '@inertiajs/vue3';
 import { ref } from 'vue';
 import { formatDate } from '@/helper';
+import axios from 'axios';
 
 const props = defineProps({
     header: {
@@ -23,6 +24,9 @@ const props = defineProps({
     }
 });
 
+//Manually append for export, and use 1/0, true and false will have querystring issue
+props.filters.is_export = 0;
+
 const routeGroupName = 'entrylogs';
 const headerTitle = ref('Entry Logs');
 const form = useForm(props.filters);
@@ -33,10 +37,46 @@ const sort = (field) => {
     submit();
 }
 
+function createQueryString(data, prefix = '') {
+    return Object.keys(data).map(key => {
+        let val = data[key]
+        let newPrefix = prefix ? `${prefix}[${key}]` : key
+        if (val !== null && typeof val === 'object') {
+            return createQueryString(val, newPrefix)
+        } else {
+            if (val == null) val = "";
+            return `${newPrefix}=${encodeURIComponent(`${val}`.replace(/\s/g, '_'))}`
+        }
+    }).join('&')
+}
+
 const submit = () => {
-    form.get(route(routeGroupName + '.index'), {
-        preserveScroll: true,
-    });
+    if (form.is_export) {
+        let queryString = createQueryString(form.data());
+        axios.get(route(routeGroupName + '.index') + "?" + queryString, { responseType: 'blob' }).then(response => {
+            const type = response.headers['content-type']
+
+            const contentDisposition = response.headers['content-disposition'];
+            let filename = 'exportfile';
+
+            if (contentDisposition) {
+                const fileNameMatch = contentDisposition.match(/filename="(.+)"/);
+                if (fileNameMatch && fileNameMatch.length === 2) {
+                    filename = fileNameMatch[1];
+                }
+            }
+
+            const blob = new Blob([response.data], { type: type, encoding: 'UTF-8' })
+            const link = document.createElement('a')
+            link.href = window.URL.createObjectURL(blob)
+            link.download = filename
+            link.click()
+        })
+    } else {
+        form.get(route(routeGroupName + '.index'), {
+            preserveScroll: true,
+        });
+    }
 };
 
 const destroy = (id, name) => {
@@ -45,6 +85,10 @@ const destroy = (id, name) => {
         router.delete(route(routeGroupName + '.destroy', id));
     }
 };
+
+const isExport = (cond) => {
+    form.is_export = cond;
+}
 
 </script>
 
@@ -101,10 +145,15 @@ const destroy = (id, name) => {
                             <label for="stationInput">Overstay</label>
                         </div>
                     </div>
-                    <div class="col-12">
-                        <PrimaryButton type="submit" :disabled="form.processing">
+                    <div class="col-12 d-flex justify-content-between">
+                        <PrimaryButton type="submit" :disabled="form.processing" @click="isExport(0)">
                             <i class="bi bi-search"></i>
                             Search
+                        </PrimaryButton>
+
+                        <PrimaryButton type="submit" :disabled="form.processing" @click="isExport(1)">
+                            <i class="bi bi-filetype-csv"></i>
+                            Export
                         </PrimaryButton>
                     </div>
                 </div>
@@ -133,7 +182,7 @@ const destroy = (id, name) => {
                                 <i class="bi bi-trash"></i>
                             </button>
                         </td>
-                        <td>{{ item.employee?.card_id }}</td>
+                        <td>{{ item.employee?.staff_no }}</td>
                         <td>{{ item.employee?.name }}</td>
                         <td>{{ item.station?.name }}</td>
                         <td>{{ formatDate(item.enter_time) }}</td>

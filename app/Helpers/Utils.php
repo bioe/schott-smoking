@@ -42,7 +42,6 @@ if (!function_exists('date_extract_format')) {
     }
 }
 
-
 if (!function_exists('imgSanitize')) {
     function imgSanitize($file, $thumbwidth = 2000, $thumbheight = 2000, $quality = 90)
     {
@@ -118,7 +117,10 @@ if (!function_exists('imgSanitize')) {
 if (!function_exists('getHoursMinutes')) {
     function getHoursMinutes($seconds, $short = true)
     {
-        if ($seconds == 0) return "0";
+        if (0 == $seconds) {
+            return "0";
+        }
+
         $hours = floor($seconds / 3600);
         $minutes = floor(($seconds / 60) % 60);
         $seconds = $seconds % 60;
@@ -126,15 +128,21 @@ if (!function_exists('getHoursMinutes')) {
         $result = '';
         if ($hours > 0) {
             $result .= $hours . ' hours ';
-            if ($short) return $result;
+            if ($short) {
+                return $result;
+            }
         }
         if ($minutes > 0) {
             $result .= $minutes . ' minutes ';
-            if ($short) return $result;
+            if ($short) {
+                return $result;
+            }
         }
         if ($seconds > 0) {
             $result .= $seconds . ' seconds';
-            if ($short) return $result;
+            if ($short) {
+                return $result;
+            }
         }
 
         return $result;
@@ -146,41 +154,47 @@ if (!function_exists('frontHexToNumber')) {
     function frontHexToNumber($hex)
     {
         /*Eg. Full Card 0009527380 145 24660
-        * Incoming
-        * 0C00916054A9 - Correct
-        * 90C00916054A - Wrong
-        */
+         * Incoming
+         * 0C00916054A9 - Correct
+         * 90C00916054A - Wrong
+         */
         if (strlen($hex) != 12) {
             //invalid card_id
             return null;
         }
 
-        $second_char = substr($hex, 1, 1);
-        if (!preg_match("/[a-z]/i", $second_char)) {
-            //Incoming is wrong 
-            //Second character not alphabet re-arrage first character to last character
-            //Sometime Arduino will mess up the character position
-            $firstChar = substr($hex, 0, 1);
-            $substring = substr($hex, 1);
-            $hex = $substring . $firstChar;
-        }
+        // $second_char = substr($hex, 1, 1);
+        // if (!preg_match("/[a-z]/i", $second_char)) {
+        //     //Incoming is wrong
+        //     //Second character not alphabet re-arrage first character to last character
+        //     //Sometime Arduino will mess up the character position
+        //     $firstChar = substr($hex, 0, 1);
+        //     $substring = substr($hex, 1);
+        //     $hex = $substring . $firstChar;
+        // }
 
-        //UART Protocal 
+        //UART Protocal
         //always start from index 2, get 8 characters
         $front_hex = substr($hex, 2, strlen($hex) - 4);
         //convert from hex to decimal
-        $front_number = hexdec($front_hex); //Front number 
+        $front_number = hexdec($front_hex); //Front number
         $behind_hex = dechex($front_number); //Convert to hex
 
         $three = hexdec(substr($behind_hex, 0, 2)); //Split first 2 hex and convert to decimal
-        if (strlen($three) == 1) $three = "00" . $three; //if only 1 char add two zero
-        if (strlen($three) == 2) $three = "0" . $three; //if only 2 char add one zero
-        $four =  hexdec(substr($behind_hex, 2, 4)); //Split last 4 hex and convert to decimal
+        if (strlen($three) == 1) {
+            $three = "00" . $three;
+        }
+        //if only 1 char add two zero
+        if (strlen($three) == 2) {
+            $three = "0" . $three;
+        }
+        //if only 2 char add one zero
+        $four = hexdec(substr($behind_hex, 2, 4)); //Split last 4 hex and convert to decimal
 
         //Add 0 between the space
         //Last 8 digit (0)145(0)24660
         $real_card_id = "0" . $three . "0" . $four;
-        return   $real_card_id;
+        return $real_card_id;
     }
 }
 
@@ -188,29 +202,30 @@ if (!function_exists('behindHexToNumber')) {
     //From Shopee RFID RDM6300
     function behindHexToNumber($hex)
     {
-        /*Eg. 
-        * Incoming
-        * 0006413739 097 56747 = 0B0061DDAB1C - Correct
-        * 0006423272 098 00744 = 0B006202E838 - Correct
-        */
+        /*Eg.
+         * Incoming
+         * 0006413739 097 56747 = 0B0061DDAB1C - Correct
+         * 0006423272 098 00744 = 0B006202E838 - Correct
+         */
         if (strlen($hex) != 12) {
             //invalid card_id
             return null;
         }
 
-        $second_char = substr($hex, 1, 1);
-        if (!preg_match("/[a-z]/i", $second_char)) {
-            //Second character not alphabet re-arrage first character to last character
-            //Sometime Arduino will mess up the character position
-            $firstChar = substr($hex, 0, 1);
-            $substring = substr($hex, 1);
-            $hex = $substring . $firstChar;
-        }
+        // $second_char = substr($hex, 1, 1);
+        // if (!preg_match("/[a-z]/i", $second_char)) {
+        //     //Second character not alphabet re-arrage first character to last character
+        //     //Sometime Arduino will mess up the character position
+        //     $firstChar = substr($hex, 0, 1);
+        //     $substring = substr($hex, 1);
+        //     $hex = $substring . $firstChar;
+        // }
 
-        //UART Protocal 
+        //UART Protocal
         //always start from index 4, get 8 characters
         $behind_hex = substr($hex, 4, strlen($hex) - 4);
         $three = hexdec(substr($behind_hex, 0, 2)); //Split first 2 hex and convert to decimal
+
         //if not three char append extra zero
         if (strlen($three) != 3) {
             for ($i = 0; $i <= (3 - strlen($three)); $i++) {
@@ -218,7 +233,7 @@ if (!function_exists('behindHexToNumber')) {
             }
         }
 
-        $five =  hexdec(substr($behind_hex, 2, 4)); //Split last 4 hex and convert to decimal
+        $five = hexdec(substr($behind_hex, 2, 4)); //Split last 4 hex and convert to decimal
         //if not five char append extra zero
         if (strlen($five) != 5) {
             for ($i = 0; $i <= (5 - strlen($five)); $i++) {
@@ -229,6 +244,6 @@ if (!function_exists('behindHexToNumber')) {
         //Add 0 between the space
         //Last 8 digit (0)145(0)24660
         $real_card_id = "0" . $three . "0" . $five;
-        return   $real_card_id;
+        return $real_card_id;
     }
 }

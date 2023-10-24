@@ -23,7 +23,7 @@ class EntryLogController extends Controller
             'start' => date("Y-m-d"),
             'end' => null,
             'station_id' => null,
-            'overstay' => null
+            'overstay' => null,
         ]);
 
         $list = EntryLog::with(['employee', 'station'])
@@ -32,6 +32,7 @@ class EntryLogController extends Controller
                     $q->where(function ($q) use ($filters) {
                         $q->orWhere('name', 'like', '%' . $filters['keyword'] . '%');
                         $q->orWhere('card_id', 'like', '%' . $filters['keyword'] . '%');
+                        $q->orWhere('staff_no', 'like', '%' . $filters['keyword'] . '%');
                     });
                 });
             })->when(!empty($filters['start']), function ($q)  use ($filters) {
@@ -48,12 +49,16 @@ class EntryLogController extends Controller
 
         $station_list = Station::all();
 
-        return Inertia::render('EntryLog/Index', [
-            'header' => EntryLog::header(),
-            'filters' => $filters,
-            'list' => $list,
-            'station_list' => $station_list
-        ]);
+        if ($request->is_export == 1) {
+            $this->export($list);
+        } else {
+            return Inertia::render('EntryLog/Index', [
+                'header' => EntryLog::header(),
+                'filters' => $filters,
+                'list' => $list,
+                'station_list' => $station_list
+            ]);
+        }
     }
 
     /**
@@ -98,5 +103,32 @@ class EntryLogController extends Controller
     {
         $entrylog->delete();
         return Redirect::route('entrylogs.index')->with('message', 'Log deleted successfully');
+    }
+
+    public function export($list)
+    {
+        header("Content-Type: text/csv;charset=utf-8");
+        header("Content-Disposition: attachment;filename=\"cost_center_template.csv\"");
+        header("Pragma: no-cache");
+        header("Expires: 0");
+
+        $file = fopen('php://output', 'w');
+        header('Content-Type: text/csv');
+
+        $header = ['Staff No', 'Name', 'Entry Time', 'Exit Time', 'Duration', 'Overstay'];
+        fputcsv($file, $header);
+        foreach ($list as $log) {
+            fputcsv($file, [
+                $log->employee->staff_no,
+                $log->employee->name,
+                $log->enter_time,
+                $log->exit_time,
+                getHoursMinutes($log->actual_stay_duration_seconds, false),
+                $log->overstay_seconds > 0 ? getHoursMinutes($log->overstay_seconds, false) : '',
+            ]);
+        }
+
+        fclose($file);
+        exit();
     }
 }

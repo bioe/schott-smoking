@@ -25,6 +25,7 @@ class EmployeeController extends Controller
         $list = Employee::query()->with('cost_center')->when(!empty($filters['keyword']), function ($q) use ($filters) {
             $q->orWhere('name', 'like', '%' . $filters['keyword'] . '%');
             $q->orWhere('card_id', 'like', '%' . $filters['keyword'] . '%');
+            $q->orWhere('staff_no', 'like', '%' . $filters['keyword'] . '%');
         })->when(!empty($filters['cost_center_id']), function ($q) use ($filters) {
             $filters['cost_center_id'] == 'is_null' ?  $q->whereNull('cost_center_id') : $q->where('cost_center_id',  $filters['cost_center_id']);
         })->byCostCenter(Auth::user())->filterSort($filters)->paginate(config('forms.paginate'));
