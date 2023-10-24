@@ -50,22 +50,22 @@ class EntryLog extends BaseModel
     public function finishedAt(): Attribute
     {
         return Attribute::make(
-            get: fn(mixed $value, array $attributes) => isset($attributes['enter_time']) ? Carbon::createFromFormat(date_extract_format($attributes['enter_time']), $attributes['enter_time'])->addSeconds($attributes['stay_duration_seconds']) : null
+            get: fn (mixed $value, array $attributes) => isset($attributes['enter_time']) ? Carbon::createFromFormat(date_extract_format($attributes['enter_time']), $attributes['enter_time'])->addSeconds($attributes['stay_duration_seconds']) : null
         );
     }
 
     public function stayLabel(): Attribute
     {
         return Attribute::make(
-            get: fn(mixed $value, array $attributes) => isset($attributes['actual_stay_duration_seconds']) && null != $attributes['actual_stay_duration_seconds'] ? getHoursMinutes($attributes['actual_stay_duration_seconds']) : ''
+            get: fn (mixed $value, array $attributes) => isset($attributes['actual_stay_duration_seconds']) && null != $attributes['actual_stay_duration_seconds'] ? getHoursMinutes($attributes['actual_stay_duration_seconds']) : ''
         );
     }
 
     public function canDeleteEntry(): Attribute
     {
         return Attribute::make(
-            get: fn(mixed $value, array $attributes) => isset($attributes['enter_time']) && null == $attributes['exit_time'] &&
-            Carbon::createFromFormat(date_extract_format($attributes['enter_time']), $attributes['enter_time'])->diffInHours(Carbon::now()) > 1
+            get: fn (mixed $value, array $attributes) => isset($attributes['enter_time']) && null == $attributes['exit_time'] &&
+                Carbon::createFromFormat(date_extract_format($attributes['enter_time']), $attributes['enter_time'])->diffInHours(Carbon::now()) > 1
         );
     }
 
@@ -108,7 +108,7 @@ class EntryLog extends BaseModel
     {
         $headers = array();
         return array_merge($headers, [
-            ['field' => 'employee.card_id', 'title' => 'Card', 'sortable' => true],
+            ['field' => 'employee.staff_no', 'title' => 'Staff no', 'sortable' => true],
             ['field' => 'employee.name', 'title' => 'Name', 'sortable' => true],
             ['field' => 'station.name', 'title' => 'Station', 'sortable' => true],
             ['field' => 'enter_time', 'title' => 'Entry', 'sortable' => true],

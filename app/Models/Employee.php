@@ -43,7 +43,7 @@ class Employee extends BaseModel
     public function active(): Attribute
     {
         return Attribute::make(
-            get: fn(string $value) => $value ? true : false
+            get: fn (string $value) => $value ? true : false
         );
     }
 
@@ -69,6 +69,7 @@ class Employee extends BaseModel
     {
         $headers = array();
         return array_merge($headers, [
+            ['field' => 'staff_no', 'title' => 'Staff No', 'sortable' => true],
             ['field' => 'card_id', 'title' => 'Card ID', 'sortable' => true],
             ['field' => 'name', 'title' => 'Name', 'sortable' => true],
             ['field' => 'cost_center_id', 'title' => 'Cost Center'],

@@ -18,6 +18,7 @@ class EmployeeUpdateRequest extends FormRequest
         //$this->employee = id //Auto from laravel
         $rules = [];
         return  array_merge($rules, [
+            'staff_no' => ['string', 'max:255'],
             'card_id' => ['string', 'max:255', Rule::unique(Employee::class)->ignore($this->employee)],
             'name' => ['string', 'max:255'],
             'cost_center_id' => ['nullable'],

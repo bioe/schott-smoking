@@ -131,21 +131,18 @@ if (!function_exists('getHoursMinutes')) {
             if ($short) {
                 return $result;
             }
-
         }
         if ($minutes > 0) {
             $result .= $minutes . ' minutes ';
             if ($short) {
                 return $result;
             }
-
         }
         if ($seconds > 0) {
             $result .= $seconds . ' seconds';
             if ($short) {
                 return $result;
             }
-
         }
 
         return $result;
@@ -166,15 +163,15 @@ if (!function_exists('frontHexToNumber')) {
             return null;
         }
 
-        $second_char = substr($hex, 1, 1);
-        if (!preg_match("/[a-z]/i", $second_char)) {
-            //Incoming is wrong
-            //Second character not alphabet re-arrage first character to last character
-            //Sometime Arduino will mess up the character position
-            $firstChar = substr($hex, 0, 1);
-            $substring = substr($hex, 1);
-            $hex = $substring . $firstChar;
-        }
+        // $second_char = substr($hex, 1, 1);
+        // if (!preg_match("/[a-z]/i", $second_char)) {
+        //     //Incoming is wrong
+        //     //Second character not alphabet re-arrage first character to last character
+        //     //Sometime Arduino will mess up the character position
+        //     $firstChar = substr($hex, 0, 1);
+        //     $substring = substr($hex, 1);
+        //     $hex = $substring . $firstChar;
+        // }
 
         //UART Protocal
         //always start from index 2, get 8 characters
@@ -229,8 +226,6 @@ if (!function_exists('behindHexToNumber')) {
         $behind_hex = substr($hex, 4, strlen($hex) - 4);
         $three = hexdec(substr($behind_hex, 0, 2)); //Split first 2 hex and convert to decimal
 
-        \Log::info("Behind Hex " . $behind_hex);
-        \Log::info("Three " . $three);
         //if not three char append extra zero
         if (strlen($three) != 3) {
             for ($i = 0; $i <= (3 - strlen($three)); $i++) {

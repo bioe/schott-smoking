@@ -22,6 +22,7 @@ const routeGroupName = 'employees';
 const headerTitle = ref('Employee');
 
 const form = useForm({
+    staff_no: props.data.staff_no ?? '',
     card_id: props.data.card_id ?? '',
     name: props.data.name ?? '',
     cost_center_id: props.data.cost_center_id ?? null,
@@ -65,6 +66,12 @@ const form = useForm({
                                     <Checkbox id="checkActive" v-model:checked="form.active">
                                         Active
                                     </Checkbox>
+                                </div>
+                                <div class="col-md-4">
+                                    <InputLabel for="staff_no" value="Staff No" />
+                                    <TextInput id="staff_no" type="text" v-model="form.staff_no"
+                                        :invalid="form.errors.staff_no" required />
+                                    <InputError :message="form.errors.staff_no" />
                                 </div>
                                 <div class="col-md-4">
                                     <InputLabel for="card_id" value="Card ID" />
