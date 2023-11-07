@@ -25,7 +25,7 @@ class AccessController extends Controller
             $card_id = $request->card_id;
             $request_card_data = $request->card_id;
         } else if ($request->has('card_hex_last')) {
-            $card_id = behindHexToNumber($request->card_hex_last);
+            $card_id = $this->decodeCard($station->code, $request->card_hex_last);
             $request_card_data = $request->card_hex_last;
         } else {
             $card_id = frontHexToNumber($request->card_hex);
@@ -108,7 +108,7 @@ class AccessController extends Controller
             $card_id = $request->card_id;
             $request_card_data = $request->card_id;
         } else if ($request->has('card_hex_last')) {
-            $card_id = behindHexToNumber($request->card_hex_last);
+            $card_id = $this->decodeCard($station->code, $request->card_hex_last);
             $request_card_data = $request->card_hex_last;
         } else {
             $card_id = frontHexToNumber($request->card_hex);
@@ -170,5 +170,23 @@ class AccessController extends Controller
         }
         \Log::channel('entry')->info($msg);
         return response()->json(['message' => $msg], 400);
+    }
+
+    /* To retry multiple time, due to incoming hex char might be in wrong position */
+    public function decodeCard($station_code, $hex, $shift = 0)
+    {
+        $card_id = behindHexToNumber($hex, $shift);
+
+        $employee = Employee::where('card_id', $card_id)->first();
+        if ($employee == null) {
+            \Log::channel('entry')->info($shift . '. Employee ' . $hex . "|" . $card_id . ' not found in ' . $station_code); //Some detail msg cannot be shown
+
+            if ($shift <= 2) {
+                //Retry
+                return $this->decodeCard($station_code, $hex, $shift + 1);
+            }
+        }
+
+        return $card_id;
     }
 }

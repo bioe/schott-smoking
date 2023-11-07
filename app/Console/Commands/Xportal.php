@@ -31,7 +31,7 @@ class Xportal extends Command
         $this->comment('Start Query Employee');
 
         //TCCode, StaffNo, CardNo, TName, Branch, Divison, Dept_Code, Job_Code, Shift_Code, Amcard, SuperCard, StartDt, EndDt, AttCaptureDoorGrp. CompanyName, DoorAcc_Code, FlAcc_Code
-        $emps = XportalEmployee::limit(10)->get();
+        $emps = XportalEmployee::all();
         foreach ($emps as $e) {
 
             $cc = null;

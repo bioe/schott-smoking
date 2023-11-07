@@ -200,7 +200,7 @@ if (!function_exists('frontHexToNumber')) {
 
 if (!function_exists('behindHexToNumber')) {
     //From Shopee RFID RDM6300
-    function behindHexToNumber($hex)
+    function behindHexToNumber($hex, $shift)
     {
         /*Eg.
          * Incoming
@@ -220,6 +220,15 @@ if (!function_exists('behindHexToNumber')) {
         //     $substring = substr($hex, 1);
         //     $hex = $substring . $firstChar;
         // }
+
+        //Re-arrange front char to back base on number of shift.
+        //Arduino will sometime return wrong hex, with wrong char position
+        if ($shift > 0) {
+            $frontChars = substr($hex, 0, $shift);
+            $substring = substr($hex, $shift);
+            $hex = $substring . $frontChars;
+        }
+
 
         //UART Protocal
         //always start from index 4, get 8 characters
