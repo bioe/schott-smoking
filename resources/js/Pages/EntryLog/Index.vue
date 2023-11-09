@@ -145,6 +145,16 @@ const isExport = (cond) => {
                             <label for="stationInput">Overstay</label>
                         </div>
                     </div>
+                    <div class="col-md-3">
+                        <div class="form-floating mb-3">
+                            <select v-model="form.exit_time" class="form-select">
+                                <option :value=null>All</option>
+                                <option :value="'yes'">With Exit Time</option>
+                                <option :value="'no'">Without Exit Time</option>
+                            </select>
+                            <label for="stationInput">Exit Time</label>
+                        </div>
+                    </div>
                     <div class="col-12 d-flex justify-content-between">
                         <PrimaryButton type="submit" :disabled="form.processing" @click="isExport(0)">
                             <i class="bi bi-search"></i>

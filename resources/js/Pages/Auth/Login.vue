@@ -81,13 +81,14 @@ const submit = () => {
                 <Link v-if="canResetPassword" :href="route('password.request')"> Forgot your password?
                 </Link>
             </div>
-
-            <h5>Station Link</h5>
-            <div class="list-group">
-                <a v-for="station in station_list" :href="station.url" class="list-group-item list-group-item-action">
-                    {{ station.name }}
-                </a>
-            </div>
         </form>
+
+        <ul class="nav justify-content-center border-bottom">
+            <li v-for="station in station_list" class="nav-item">
+                <a :href="station.url" class="nav-link px-2 text-body-secondary">{{ station.name }}</a>
+            </li>
+            <li class="nav-item"><a :href="route('pax')" class="nav-link px-2 text-body-secondary">Total Pax</a></li>
+        </ul>
+
     </GuestLayout>
 </template>

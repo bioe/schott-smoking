@@ -209,7 +209,7 @@ const air_quality_bg = computed(() => {
                 <div class="col-lg-3 text-light">
                     <div class="sensor-column text-center rounded-3 bg-success">
                         <h2>Temperature</h2>
-                        {{ temperature }}
+                        {{ temperature }} °C
                     </div>
                 </div>
             </div>
@@ -231,7 +231,7 @@ const air_quality_bg = computed(() => {
                     <div class="h-100 p-3 box-bg border rounded-3">
                         <table class="table table-bordered table-striped table-dark">
                             <thead>
-                                <tr class="schott-colour-dark text-light fs-3">
+                                <tr class="schott-colour-dark text-light fs-5">
                                     <HeadRow width="20%">No</HeadRow>
                                     <HeadRow>Name</HeadRow>
                                     <HeadRow width="10%">Remaining</HeadRow>
@@ -239,14 +239,14 @@ const air_quality_bg = computed(() => {
                             </thead>
                             <tbody>
                                 <tr v-for="(item, index) in list">
-                                    <td class="fs-3" :class="warningColour(item.warning_date, item.finish_date)">{{
+                                    <td class="fs-5" :class="warningColour(item.warning_date, item.finish_date)">{{
                                         item.employee?.staff_no }}</td>
-                                    <td class="fs-4 align-middle text-truncate" style="max-width: 150px;"
+                                    <td class="fs-5 align-middle text-truncate" style="max-width: 150px;"
                                         :class="warningColour(item.warning_date, item.finish_date)">{{
                                             item.employee?.name
                                         }}
                                     </td>
-                                    <td class="text-center fs-3"
+                                    <td class="text-center fs-5"
                                         :class="warningColour(item.warning_date, item.finish_date)">
                                         {{ item.timer?.minutes }}:{{
                                             item.timer?.seconds.toLocaleString(undefined, {
@@ -293,7 +293,7 @@ const air_quality_bg = computed(() => {
             <div class="modal-content">
                 <div class="modal-body">
                     <ul>
-                        <li v-for="msg in messages" class="fs-3">
+                        <li v-for="msg in messages" class="fs-1">
                             {{ msg.msg }}
                         </li>
                     </ul>

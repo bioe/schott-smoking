@@ -45,4 +45,10 @@ class Handler extends ExceptionHandler
             //
         });
     }
+
+    protected function shouldReturnJson($request, Throwable $e): bool
+    {
+        //API will always return json
+        return parent::shouldReturnJson($request, $e) || $request->is("api/*");
+    }
 }
