@@ -63,10 +63,16 @@ class EntryLog extends BaseModel
 
     public function canDeleteEntry(): Attribute
     {
+        //No Exit time can delete
         return Attribute::make(
-            get: fn (mixed $value, array $attributes) => isset($attributes['enter_time']) && null == $attributes['exit_time'] &&
-                Carbon::createFromFormat(date_extract_format($attributes['enter_time']), $attributes['enter_time'])->diffInHours(Carbon::now()) > 1
+            get: fn (mixed $value, array $attributes) => isset($attributes['enter_time']) && null == $attributes['exit_time']
         );
+
+        // More than one hour only can delete
+        // return Attribute::make(
+        //     get: fn (mixed $value, array $attributes) => isset($attributes['enter_time']) && null == $attributes['exit_time'] &&
+        //         Carbon::createFromFormat(date_extract_format($attributes['enter_time']), $attributes['enter_time'])->diffInHours(Carbon::now()) > 1
+        // );
     }
 
     public function employee()

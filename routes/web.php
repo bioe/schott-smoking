@@ -7,6 +7,7 @@ use App\Http\Controllers\EmployeeController;
 use App\Http\Controllers\EntryLogController;
 use App\Http\Controllers\CostCenterController;
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\PaxController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\StationController;
 use App\Http\Controllers\UserController;
@@ -36,6 +37,9 @@ Route::get('/', function () {
 
 Route::get('/area/{code}', [AreaController::class, 'index'])->name('area');
 Route::get('/area/{code}/latest', [AreaController::class, 'getLatest'])->name('area.latest');
+
+Route::get('/pax', [PaxController::class, 'index'])->name('pax');
+Route::get('/pax/latest', [PaxController::class, 'getLatest'])->name('pax.latest');
 
 Route::middleware('auth', 'admin')->group(function () {
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
