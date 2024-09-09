@@ -43,7 +43,7 @@ class EmailOverstay extends Command
                 ->get();
 
             if ($list->count() > 0) {
-                Mail::to($user->email)->send(new MailOverstayEmployee("Eric", $list));
+                Mail::to($user->email)->send(new MailOverstayEmployee($user->name, $list));
                 \Log::info("Email sent to " . $user->email);
             }
         }

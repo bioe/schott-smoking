@@ -38,7 +38,7 @@ class EntryLogController extends Controller
                 });
             })->when(!empty($filters['start']), function ($q)  use ($filters) {
                 $q->startOfDay('enter_time', $filters['start']);
-            })->when(!empty($filters['end']), function ($q)  use ($filters) {
+            })->when(!empty($filters['end']) && $filters['exit_time'] != 'no', function ($q)  use ($filters) {
                 $q->endOfDay('exit_time', $filters['end']);
             })->when(!empty($filters['overstay'] != null && $filters['overstay'] == 'yes'), function ($q) {
                 $q->where('overstay_seconds', '>', 0);
@@ -92,16 +92,12 @@ class EntryLogController extends Controller
         //
     }
 
-    public function edit(string $id = null)
-    {
-    }
+    public function edit(string $id = null) {}
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(CostCenterUpdateRequest $request, string $id = null)
-    {
-    }
+    public function update(CostCenterUpdateRequest $request, string $id = null) {}
 
     /**
      * Remove the specified resource from storage.

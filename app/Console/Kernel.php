@@ -14,8 +14,9 @@ class Kernel extends ConsoleKernel
     {
         // $schedule->command('inspire')->hourly();
         $schedule->command('arduino:sensors')->everyFiveMinutes();
-        $schedule->command('xportal:sync')->dailyAt('00:00');
+        $schedule->command('xportal:sync')->everyFourHours();
         $schedule->command('email:overstay')->dailyAt('23:30');
+        $schedule->command('entry:delete')->everyFourHours();
     }
 
     /**

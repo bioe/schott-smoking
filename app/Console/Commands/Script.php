@@ -19,7 +19,7 @@ class Script extends Command
      *
      * @var string
      */
-    protected $signature = 'script:run';
+    protected $signature = 'script:run {function} {value?}';
 
     /**
      * The console command description.
@@ -33,11 +33,37 @@ class Script extends Command
      */
     public function handle()
     {
+        $allow_function = ['email', 'card'];
+        $function = $this->argument('function');
+
+        if (!in_array($function, $allow_function)) {
+            $this->comment("Available command");
+            $this->comment("script:run email");
+            $this->comment("script:run card {hex}");
+        } else if ($function == "email") {
+            $this->email();
+        } else if ($function == "card") {
+            $this->card();
+        }
+    }
+
+    public function email()
+    {
         $this->comment("START TEST EMAIL");
 
         $email = "chris.lim@schott.com";
         Mail::to($email)->send(new MailOverstayEmployee("THIS IS TEST", null));
         \Log::info("Email sent to " . $email);
         $this->comment("END TEST EMAIL");
+    }
+
+    public function card()
+    {
+        $this->comment("START CARD");
+        $value = $this->argument("value");
+        $this->comment('Value: ' . $value);
+
+        $output = behindHexToNumber($value, 0);
+        $this->comment($output);
     }
 }
